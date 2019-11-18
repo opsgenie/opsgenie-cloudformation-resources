@@ -1,0 +1,15 @@
+{
+    "typeName": "Atlassian::Opsgenie::Integration",
+    "language": "java",
+    "runtime": "java8",
+    "entrypoint": "com.atlassian.opsgenie.integration.HandlerWrapper::handleRequest",
+    "testEntrypoint": "com.atlassian.opsgenie.integration.HandlerWrapper::testEntrypoint",
+    "settings": {
+        "namespace": [
+            "com",
+            "atlassian",
+            "opsgenie",
+            "integration"
+        ]
+    }
+}

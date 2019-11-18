@@ -1,0 +1,15 @@
+{
+    "typeName": "Atlassian::Opsgenie::Team",
+    "language": "java",
+    "runtime": "java8",
+    "entrypoint": "com.atlassian.opsgenie.team.HandlerWrapper::handleRequest",
+    "testEntrypoint": "com.atlassian.opsgenie.team.HandlerWrapper::testEntrypoint",
+    "settings": {
+        "namespace": [
+            "com",
+            "atlassian",
+            "opsgenie",
+            "team"
+        ]
+    }
+}

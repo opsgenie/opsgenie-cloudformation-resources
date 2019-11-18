@@ -1,0 +1,30 @@
+{
+  "AWSTemplateFormatVersion": "2010-09-09",
+  "Description": "Opsgenie Integration",
+  "Parameters": {
+    "OpsgenieApiKey": {
+      "Description": "Enter Opsgenie Api Key",
+      "Type": "String"
+    },
+    "OpsgenieEndpoint": {
+      "Description": "Enter Opsgenie Api URL",
+      "Type": "String"
+    }
+  },
+  "Resources": {
+    "IntegrationTest": {
+      "Type": "Atlassian::Opsgenie::Integration",
+      "Properties": {
+        "OpsgenieApiKey": {
+          "Ref": "OpsgenieApiKey"
+        },
+        "OpsgenieApiEndpoint": {
+          "Ref": "OpsgenieEndpoint"
+        },
+        "IntegrationType": "Marid",
+        "Name": "test maridint",
+	"Enabled":true      
+	}
+    }
+  }
+}
