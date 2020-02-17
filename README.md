@@ -27,7 +27,7 @@
 aws cloudformation register-type \
 --region us-west-2 \
 --type-name "Atlassian::Opsgenie::User" \
---schema-handler-package "s3://opsgeniedownloads/cloudformation/atlassian-opsgenie-user.zip " \
+--schema-handler-package "s3://opsgeniedownloads/cloudformation/atlassian-opsgenie-user.zip" \
 --type RESOURCE
 ```
 
@@ -36,7 +36,7 @@ aws cloudformation register-type \
 aws cloudformation register-type \
 --region us-west-2 \
 --type-name "Atlassian::Opsgenie::Team" \
---schema-handler-package "s3://opsgeniedownloads/cloudformation/atlassian-opsgenie-team.zip " \
+--schema-handler-package "s3://opsgeniedownloads/cloudformation/atlassian-opsgenie-team.zip" \
 --type RESOURCE
 ```
 
@@ -46,7 +46,7 @@ aws cloudformation register-type \
 aws cloudformation register-type \
 --region us-west-2 \
 --type-name "Atlassian::Opsgenie::Integration" \
---schema-handler-package "s3://opsgeniedownloads/cloudformation/atlassian-opsgenie-integration.zip " \
+--schema-handler-package "s3://opsgeniedownloads/cloudformation/atlassian-opsgenie-integration.zip" \
 --type RESOURCE
 ```
 
