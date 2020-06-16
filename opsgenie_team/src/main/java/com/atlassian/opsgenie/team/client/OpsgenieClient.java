@@ -40,7 +40,6 @@ public class OpsgenieClient {
                 .build();
 
         String bodyA = execute(request);
-        System.out.println(bodyA);
 
         return objectMapper.readValue(bodyA, CreateTeamResponse.class);
     }
@@ -55,7 +54,6 @@ public class OpsgenieClient {
                 .build();
 
         String bodyA = execute(request);
-        System.out.println(bodyA);
 
         return objectMapper.readValue(bodyA, DeleteTeamResponse.class);
     }
@@ -70,7 +68,6 @@ public class OpsgenieClient {
                 .build();
 
         String bodyA = execute(request);
-        System.out.println(bodyA);
 
         return objectMapper.readValue(bodyA, ListTeamResponse.class);
     }
@@ -85,7 +82,6 @@ public class OpsgenieClient {
                 .build();
 
         String bodyA = execute(request);
-        System.out.println(bodyA);
 
         return objectMapper.readValue(bodyA, ReadTeamResponse.class);
     }
@@ -102,7 +98,6 @@ public class OpsgenieClient {
                 .build();
 
         String bodyA = execute(request);
-        System.out.println(bodyA);
 
         return objectMapper.readValue(bodyA, UpdateTeamResponse.class);
     }
