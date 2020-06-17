@@ -58,7 +58,10 @@ public class CreateHandler extends BaseHandler<CallbackContext> {
                     .members(members)
                     .build());
 
-            model.setId(createTeamResponse.getTeamDataModel().getId());
+            model.setTeamId(createTeamResponse.getTeamDataModel().getId());
+            logger.log("CreateHandler ResourceModel contains: " + model.toString() + " with primaryId: " +
+                    model.getPrimaryIdentifier());
+
         } catch (OpsgenieClientException e) {
             if (e.getCode() == 409) {
                 return ProgressEvent.<ResourceModel, CallbackContext>builder()

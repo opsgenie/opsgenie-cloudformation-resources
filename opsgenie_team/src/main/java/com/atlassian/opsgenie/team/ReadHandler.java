@@ -25,7 +25,7 @@ public class ReadHandler extends BaseHandler<CallbackContext> {
         OpsgenieClient ogClient = new OpsgenieClient(model.getOpsgenieApiKey(), model.getOpsgenieApiEndpoint());
 
         try {
-            ReadTeamResponse readTeamResponse = ogClient.ReadTeam(model.getId());
+            ReadTeamResponse readTeamResponse = ogClient.ReadTeam(model.getTeamId());
 
             model.setName(readTeamResponse.getTeamDataModel().getName());
             model.setDescription(readTeamResponse.getTeamDataModel().getDescription());

@@ -37,7 +37,7 @@ public class UpdateHandler extends BaseHandler<CallbackContext> {
                 .collect(Collectors.toList());
 
         try {
-            UpdateTeamResponse updateTeamResponse = ogClient.UpdateTeam(model.getId(), UpdateTeamRequest.builder()
+            UpdateTeamResponse updateTeamResponse = ogClient.UpdateTeam(model.getTeamId(), UpdateTeamRequest.builder()
                     .name(model.getName())
                     .description(model.getDescription())
                     .members(members)
@@ -45,7 +45,7 @@ public class UpdateHandler extends BaseHandler<CallbackContext> {
 
             ReadTeamResponse readTeamResponse = ogClient.ReadTeam(updateTeamResponse.getTeamDataModel().getId());
 
-            model.setId(readTeamResponse.getTeamDataModel().getId());
+            model.setTeamId(readTeamResponse.getTeamDataModel().getId());
             model.setName(readTeamResponse.getTeamDataModel().getName());
             model.setDescription(readTeamResponse.getTeamDataModel().getDescription());
 

@@ -34,7 +34,7 @@ public class ListHandler extends BaseHandler<CallbackContext> {
 
                 ReadTeamResponse readTeamResponse = ogClient.ReadTeam(teamDataModel.getId());
 
-                resourceModelBuilder.id(readTeamResponse.getTeamDataModel().getId());
+                resourceModelBuilder.teamId(readTeamResponse.getTeamDataModel().getId());
                 resourceModelBuilder.name(readTeamResponse.getTeamDataModel().getName());
                 resourceModelBuilder.description(readTeamResponse.getTeamDataModel().getDescription());
 
