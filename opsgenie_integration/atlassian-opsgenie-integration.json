@@ -39,7 +39,7 @@
       "type": "string",
       "minLength": 1
     },
-    "Id": {
+    "IntegrationId": {
       "type": "string"
     },
     "Enabled": {
@@ -104,17 +104,17 @@
     "Name"
   ],
   "primaryIdentifier": [
-    "/properties/Id",
+    "/properties/IntegrationId",
     "/properties/IntegrationApiKey",
     "/properties/OpsgenieApiKey",
     "/properties/OpsgenieApiEndpoint"
   ],
   "readOnlyProperties": [
     "/properties/IntegrationApiKey",
-    "/properties/Id"
+    "/properties/IntegrationId"
   ],
   "createOnlyProperties": [
-    "/properties/Id",
+    "/properties/IntegrationId",
     "/properties/IntegrationApiKey"
   ],
   "writeOnlyProperties": [

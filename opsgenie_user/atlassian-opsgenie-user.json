@@ -5,7 +5,7 @@
   "definitions": {
   },
   "properties": {
-    "Id": {
+    "UserId": {
       "type": "string"
     },
     "OpsgenieApiEndpoint": {
@@ -42,14 +42,14 @@
     "OpsgenieApiKey"
   ],
   "createOnlyProperties": [
-    "/properties/Id"
+    "/properties/UserId"
   ],
   "writeOnlyProperties": [
     "/properties/OpsgenieApiKey",
     "/properties/OpsgenieApiEndpoint"
   ],
   "primaryIdentifier": [
-    "/properties/Id"
+    "/properties/UserId"
   ],
   "handlers": {
     "create": {

@@ -19,7 +19,7 @@ public class DeleteHandler extends BaseHandler<CallbackContext> {
         OpsgenieClient OGClient = new OpsgenieClient(model.getOpsgenieApiEndpoint(),model.getOpsgenieApiKey());
 
         try {
-            OGClient.DeleteIntegration(model.getId());
+            OGClient.DeleteIntegration(model.getIntegrationId());
         } catch (IOException e) {
             logger.log(e.getMessage());
             return ProgressEvent.<ResourceModel, CallbackContext>builder()

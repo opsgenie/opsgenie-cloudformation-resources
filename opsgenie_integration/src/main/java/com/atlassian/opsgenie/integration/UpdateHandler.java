@@ -34,7 +34,7 @@ public class UpdateHandler extends BaseHandler<CallbackContext> {
         req.setName(model.getName());
         req.setType(model.getIntegrationType());
         req.setRespondersPropertyList(model.getResponders());
-        req.setId(model.getId());
+        req.setId(model.getIntegrationId());
         req.setEnabled(model.getEnabled());
 
         try {

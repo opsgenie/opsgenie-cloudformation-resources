@@ -68,7 +68,7 @@ public class CreateHandler extends BaseHandler<CallbackContext> {
 
         try {
             CreateIntegrationResponse resp = OGClient.CreateIntegration(req);
-            model.setId(resp.getData().getId());
+            model.setIntegrationId(resp.getData().getId());
             model.setIntegrationApiKey(resp.getData().getApiKey());
         } catch (OpsgenieClientException e) {
             logger.log(e.getMessage());

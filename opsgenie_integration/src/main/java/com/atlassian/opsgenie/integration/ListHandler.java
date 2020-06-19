@@ -23,7 +23,7 @@ public class ListHandler extends BaseHandler<CallbackContext> {
         OpsgenieClient OGClient = new OpsgenieClient(request.getDesiredResourceState().getOpsgenieApiEndpoint(), request.getDesiredResourceState().getOpsgenieApiKey());
         ResourceModel model = new ResourceModel();
         try {
-            GetIntegrationResponse resp = OGClient.GetIntegration(request.getDesiredResourceState().getId());
+            GetIntegrationResponse resp = OGClient.GetIntegration(request.getDesiredResourceState().getIntegrationId());
             model.setAllowWriteAccess(resp.getData().isAllowWriteAccess());
             model.setAllowReadAccess(resp.getData().isAllowReadAccess());
             model.setAllowDeleteAccess(resp.getData().isAllowDeleteAccess());
@@ -31,7 +31,7 @@ public class ListHandler extends BaseHandler<CallbackContext> {
             model.setEnabled(resp.getData().isEnabled());
             model.setIntegrationType(resp.getData().getType());
             model.setName(resp.getData().getName());
-            model.setId(request.getDesiredResourceState().getId());
+            model.setIntegrationId(request.getDesiredResourceState().getIntegrationId());
             model.setOpsgenieApiKey(request.getDesiredResourceState().getOpsgenieApiKey());
             model.setOpsgenieApiEndpoint(request.getDesiredResourceState().getOpsgenieApiEndpoint());
             model.setIntegrationApiKey(request.getDesiredResourceState().getIntegrationApiKey());

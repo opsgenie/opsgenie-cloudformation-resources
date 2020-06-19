@@ -20,7 +20,7 @@ public class ReadHandler extends BaseHandler<CallbackContext> {
 
         OpsgenieClient OGClient = new OpsgenieClient(model.getOpsgenieApiEndpoint(), model.getOpsgenieApiKey());
         try {
-            GetIntegrationResponse resp = OGClient.GetIntegration(model.getId());
+            GetIntegrationResponse resp = OGClient.GetIntegration(model.getIntegrationId());
             model.setAllowWriteAccess(resp.getData().isAllowWriteAccess());
             model.setAllowReadAccess(resp.getData().isAllowReadAccess());
             model.setAllowDeleteAccess(resp.getData().isAllowDeleteAccess());
