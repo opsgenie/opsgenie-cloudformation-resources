@@ -53,7 +53,6 @@ public class CreateHandler extends BaseHandler<CallbackContext> {
             req.setOwnerTeam(ownerTeam);
         }
         req.setName(model.getName());
-        req.setType(model.getIntegrationType());
 
         if (model.getResponders() != null) {
             if (model.getResponders().size() > 0) {
@@ -64,9 +63,12 @@ public class CreateHandler extends BaseHandler<CallbackContext> {
             model.setEnabled(true);
         }
 
+        req.setType(model.getIntegrationType());
+
         req.setEnabled(model.getEnabled());
 
         try {
+            logger.log("[CREATE] Request data: " + req.toString());
             CreateIntegrationResponse resp = OGClient.CreateIntegration(req);
             model.setIntegrationId(resp.getData().getId());
             model.setIntegrationApiKey(resp.getData().getApiKey());
@@ -90,6 +92,9 @@ public class CreateHandler extends BaseHandler<CallbackContext> {
                     .status(OperationStatus.FAILED)
                     .build();
         }
+
+        logger.log("[CREATE] " + model.toString());
+        logger.log("[CREATE] PrimaryId: " + model.getPrimaryIdentifier());
 
         return ProgressEvent.
                 <ResourceModel, CallbackContext>builder()

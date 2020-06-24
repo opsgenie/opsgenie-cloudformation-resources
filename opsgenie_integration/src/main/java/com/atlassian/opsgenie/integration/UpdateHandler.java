@@ -66,6 +66,10 @@ public class UpdateHandler extends BaseHandler<CallbackContext> {
                     .status(OperationStatus.FAILED)
                     .build();
         }
+
+        logger.log("[UPDATE] " + model.toString());
+        logger.log("[UPDATE] PrimaryId: " + model.getPrimaryIdentifier());
+
         return ProgressEvent.<ResourceModel, CallbackContext>builder()
                 .resourceModel(model)
                 .status(OperationStatus.SUCCESS)

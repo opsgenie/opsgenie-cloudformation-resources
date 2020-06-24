@@ -63,9 +63,7 @@
     "Name"
   ],
   "primaryIdentifier": [
-    "/properties/TeamId",
-    "/properties/OpsgenieApiKey",
-    "/properties/OpsgenieApiEndpoint"
+    "/properties/TeamId"
   ],
   "createOnlyProperties": [
     "/properties/TeamId"

@@ -110,8 +110,8 @@
     "/properties/OpsgenieApiEndpoint"
   ],
   "readOnlyProperties": [
-    "/properties/IntegrationApiKey",
-    "/properties/IntegrationId"
+    "/properties/IntegrationId",
+    "/properties/IntegrationApiKey"
   ],
   "createOnlyProperties": [
     "/properties/IntegrationId",

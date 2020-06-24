@@ -38,6 +38,10 @@ public class DeleteHandler extends BaseHandler<CallbackContext> {
                     .status(OperationStatus.FAILED)
                     .build();
         }
+
+        logger.log("[DELETE] " + model.toString());
+        logger.log("[DELETE] PrimaryId: " + model.getPrimaryIdentifier());
+
         return ProgressEvent.<ResourceModel, CallbackContext>builder()
                 .resourceModel(model)
                 .status(OperationStatus.SUCCESS)

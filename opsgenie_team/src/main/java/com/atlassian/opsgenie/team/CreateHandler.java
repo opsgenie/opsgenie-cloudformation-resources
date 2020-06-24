@@ -59,8 +59,6 @@ public class CreateHandler extends BaseHandler<CallbackContext> {
                     .build());
 
             model.setTeamId(createTeamResponse.getTeamDataModel().getId());
-            logger.log("CreateHandler ResourceModel contains: " + model.toString() + " with primaryId: " +
-                    model.getPrimaryIdentifier());
 
         } catch (OpsgenieClientException e) {
             if (e.getCode() == 409) {
@@ -93,6 +91,8 @@ public class CreateHandler extends BaseHandler<CallbackContext> {
                     .build();
         }
 
+        logger.log("[CREATE] " + model.toString());
+        logger.log("[CREATE] PrimaryId: " + model.getPrimaryIdentifier());
 
         return ProgressEvent.<ResourceModel, CallbackContext>builder()
                 .resourceModel(model)
