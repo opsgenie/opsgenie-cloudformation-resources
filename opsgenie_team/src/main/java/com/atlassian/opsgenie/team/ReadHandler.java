@@ -56,9 +56,7 @@ public class ReadHandler extends BaseHandler<CallbackContext> {
                     .build();
         }
 
-        logger.log("[READ] " + model.toString());
-        logger.log("[READ] PrimaryId: " + model.getPrimaryIdentifier());
-
+        logger.log("[READ] " + model.getTeamId());
         return ProgressEvent.<ResourceModel, CallbackContext>builder()
             .resourceModel(model)
             .status(OperationStatus.SUCCESS)

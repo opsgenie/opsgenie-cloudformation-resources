@@ -78,9 +78,7 @@ public class ListHandler extends BaseHandler<CallbackContext> {
         }
 
         for (ResourceModel model: models) {
-            logger.log("[LIST] " + model.toString());
-            logger.log("[LIST] PrimaryId: " + model.getPrimaryIdentifier());
-
+            logger.log("[LIST] " + model.getTeamId());
         }
 
         return ProgressEvent.<ResourceModel, CallbackContext>builder()

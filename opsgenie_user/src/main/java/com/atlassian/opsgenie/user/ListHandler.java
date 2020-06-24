@@ -59,8 +59,7 @@ public class ListHandler extends BaseHandler<CallbackContext> {
         }
 
         for(ResourceModel model: models) {
-            logger.log("[CREATE] " + model.toString());
-            logger.log("[CREATE] PrimaryId: " + model.getPrimaryIdentifier());
+            logger.log("[CREATE] " + model.getUserId());
         }
 
         return ProgressEvent.<ResourceModel, CallbackContext>builder()

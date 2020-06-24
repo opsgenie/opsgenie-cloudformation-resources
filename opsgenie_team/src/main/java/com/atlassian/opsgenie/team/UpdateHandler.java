@@ -80,9 +80,7 @@ public class UpdateHandler extends BaseHandler<CallbackContext> {
         }
 
 
-        logger.log("[UPDATE] " + model.toString());
-        logger.log("[UPDATE] PrimaryId: " + model.getPrimaryIdentifier());
-
+        logger.log("[UPDATE] " + model.getTeamId());
         return ProgressEvent.<ResourceModel, CallbackContext>builder()
                 .resourceModel(model)
                 .status(OperationStatus.SUCCESS)

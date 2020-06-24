@@ -55,9 +55,7 @@ public class CreateHandler extends BaseHandler<CallbackContext> {
                     .build();
         }
 
-        logger.log("[CREATE] " + model.toString());
-        logger.log("[CREATE] PrimaryId: " + model.getPrimaryIdentifier());
-
+        logger.log("[CREATE] " + model.getUserId());
         return ProgressEvent.<ResourceModel, CallbackContext>builder()
                 .resourceModel(model)
                 .status(OperationStatus.SUCCESS)
