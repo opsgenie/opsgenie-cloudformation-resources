@@ -27,8 +27,8 @@
         "OpsgenieApiEndpoint": {
           "Ref": "OpsgenieApiEndpoint"
         },
-        "Username": "opsgenie-user5@opsgenie.com",
-        "FullName": "user one1",
+        "Username": "user.a@example.com",
+        "FullName": "User A",
         "Role": "User"
       }
     },
@@ -41,8 +41,8 @@
         "OpsgenieApiEndpoint": {
           "Ref": "OpsgenieApiEndpoint"
         },
-        "Username": "opsgenie-user6@opsgenie.com",
-        "FullName": "user two1",
+        "Username": "user.b@example.com",
+        "FullName": "User B",
         "Role": "User"
       }
     },
@@ -55,7 +55,7 @@
         "OpsgenieApiEndpoint": {
           "Ref": "OpsgenieApiEndpoint"
         },
-        "Name": "uuuiioo-test-team-ops",
+        "Name": "cloudformation-ops-team-test",
         "Description": "Test team with 2 user for demonstration",
         "Members": [
           {
@@ -91,7 +91,7 @@
         "Responders": [
           {
             "type": "team",
-            "name": "uuuiioo-test-team-ops"
+            "name": "cloudformation-ops-team-test"
           }
         ],
         "Enabled": true
