@@ -34,7 +34,7 @@ public class UpdateHandler extends BaseHandler<CallbackContext> {
         req.setName(model.getName());
         req.setType(model.getIntegrationType());
         req.setRespondersPropertyList(model.getResponders());
-        req.setId(model.getId());
+        req.setId(model.getIntegrationId());
         req.setEnabled(model.getEnabled());
 
         try {
@@ -66,6 +66,8 @@ public class UpdateHandler extends BaseHandler<CallbackContext> {
                     .status(OperationStatus.FAILED)
                     .build();
         }
+
+        logger.log("[UPDATE] " + model.getIntegrationId());
         return ProgressEvent.<ResourceModel, CallbackContext>builder()
                 .resourceModel(model)
                 .status(OperationStatus.SUCCESS)

@@ -23,7 +23,7 @@ public class DeleteHandler extends BaseHandler<CallbackContext> {
         OpsgenieClient ogClient = new OpsgenieClient(model.getOpsgenieApiKey(), model.getOpsgenieApiEndpoint());
 
         try {
-            DeleteTeamResponse deleteTeamResponse = ogClient.DeleteTeam(model.getId());
+            DeleteTeamResponse deleteTeamResponse = ogClient.DeleteTeam(model.getTeamId());
 
         } catch (OpsgenieClientException e) {
             if(e.getCode() == 404){
@@ -44,6 +44,7 @@ public class DeleteHandler extends BaseHandler<CallbackContext> {
                     .build();
         }
 
+        logger.log("[DELETE] " + model.getTeamId());
         return ProgressEvent.<ResourceModel, CallbackContext>builder()
                 .resourceModel(model)
                 .status(OperationStatus.SUCCESS)

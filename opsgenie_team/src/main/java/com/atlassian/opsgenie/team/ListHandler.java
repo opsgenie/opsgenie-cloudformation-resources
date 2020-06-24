@@ -34,7 +34,7 @@ public class ListHandler extends BaseHandler<CallbackContext> {
 
                 ReadTeamResponse readTeamResponse = ogClient.ReadTeam(teamDataModel.getId());
 
-                resourceModelBuilder.id(readTeamResponse.getTeamDataModel().getId());
+                resourceModelBuilder.teamId(readTeamResponse.getTeamDataModel().getId());
                 resourceModelBuilder.name(readTeamResponse.getTeamDataModel().getName());
                 resourceModelBuilder.description(readTeamResponse.getTeamDataModel().getDescription());
 
@@ -75,6 +75,10 @@ public class ListHandler extends BaseHandler<CallbackContext> {
                     .errorCode(HandlerErrorCode.InternalFailure)
                     .status(OperationStatus.FAILED)
                     .build();
+        }
+
+        for (ResourceModel model: models) {
+            logger.log("[LIST] " + model.getTeamId());
         }
 
         return ProgressEvent.<ResourceModel, CallbackContext>builder()

@@ -31,8 +31,10 @@ public class CreateHandler extends BaseHandler<CallbackContext> {
         usr.setUsername(model.getUsername());
         //todo add other fields in future
         try {
+            logger.log("Sending request for creating user: " + usr.toString());
             AddUserResponse resp = OGClient.AddUser(usr);
-            model.setId(resp.getDataModel().getId());
+            model.setUserId(resp.getDataModel().getId());
+            logger.log("ResourceModel: " + model.toString());
         } catch (OpsgenieClientException e) {
             logger.log(e.getMessage());
             HandlerErrorCode errorCode = HandlerErrorCode.GeneralServiceException;
@@ -53,6 +55,7 @@ public class CreateHandler extends BaseHandler<CallbackContext> {
                     .build();
         }
 
+        logger.log("[CREATE] " + model.getUserId());
         return ProgressEvent.<ResourceModel, CallbackContext>builder()
                 .resourceModel(model)
                 .status(OperationStatus.SUCCESS)

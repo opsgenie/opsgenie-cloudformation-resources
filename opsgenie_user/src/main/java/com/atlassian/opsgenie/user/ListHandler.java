@@ -6,6 +6,7 @@ import com.atlassian.opsgenie.user.client.OpsgenieClientException;
 import com.atlassian.opsgenie.user.model.DataModel;
 import com.atlassian.opsgenie.user.model.ListUserResponse;
 
+import javax.annotation.Resource;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -25,7 +26,7 @@ public class ListHandler extends BaseHandler<CallbackContext> {
 
             ListUserResponse listUserResponse = OGClient.ListUsers();
             for (DataModel dataModel : listUserResponse.getDataModel()) {
-                if (!dataModel.getId().equals(request.getDesiredResourceState().getId())) {
+                if (!dataModel.getId().equals(request.getDesiredResourceState().getUserId())) {
                     continue;
                 }
                 ResourceModel tmp = new ResourceModel();
@@ -34,7 +35,7 @@ public class ListHandler extends BaseHandler<CallbackContext> {
                 tmp.setOpsgenieApiKey(request.getDesiredResourceState().getOpsgenieApiKey());
                 tmp.setUsername(dataModel.getUsername());
                 tmp.setFullName(dataModel.getFullName());
-                tmp.setId(dataModel.getId());
+                tmp.setUserId(dataModel.getId());
                 models.add(tmp);
             }
         } catch (OpsgenieClientException e) {
@@ -57,6 +58,9 @@ public class ListHandler extends BaseHandler<CallbackContext> {
                     .build();
         }
 
+        for(ResourceModel model: models) {
+            logger.log("[CREATE] " + model.getUserId());
+        }
 
         return ProgressEvent.<ResourceModel, CallbackContext>builder()
                 .resourceModels(models)

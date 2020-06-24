@@ -25,7 +25,7 @@
     }
   },
   "properties": {
-    "Id": {
+    "TeamId": {
       "description": "Team id",
       "type": "string",
       "pattern": "^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$"
@@ -63,12 +63,10 @@
     "Name"
   ],
   "primaryIdentifier": [
-    "/properties/Id",
-    "/properties/OpsgenieApiKey",
-    "/properties/OpsgenieApiEndpoint"
+    "/properties/TeamId"
   ],
   "createOnlyProperties": [
-    "/properties/Id"
+    "/properties/TeamId"
   ],
   "writeOnlyProperties": [
     "/properties/OpsgenieApiKey",

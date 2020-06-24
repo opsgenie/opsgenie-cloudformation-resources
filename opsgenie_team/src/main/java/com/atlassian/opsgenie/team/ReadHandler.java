@@ -25,7 +25,7 @@ public class ReadHandler extends BaseHandler<CallbackContext> {
         OpsgenieClient ogClient = new OpsgenieClient(model.getOpsgenieApiKey(), model.getOpsgenieApiEndpoint());
 
         try {
-            ReadTeamResponse readTeamResponse = ogClient.ReadTeam(model.getId());
+            ReadTeamResponse readTeamResponse = ogClient.ReadTeam(model.getTeamId());
 
             model.setName(readTeamResponse.getTeamDataModel().getName());
             model.setDescription(readTeamResponse.getTeamDataModel().getDescription());
@@ -56,6 +56,7 @@ public class ReadHandler extends BaseHandler<CallbackContext> {
                     .build();
         }
 
+        logger.log("[READ] " + model.getTeamId());
         return ProgressEvent.<ResourceModel, CallbackContext>builder()
             .resourceModel(model)
             .status(OperationStatus.SUCCESS)

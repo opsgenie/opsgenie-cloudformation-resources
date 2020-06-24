@@ -20,7 +20,7 @@ public class ReadHandler extends BaseHandler<CallbackContext> {
 
         OpsgenieClient OGClient = new OpsgenieClient(model.getOpsgenieApiEndpoint(), model.getOpsgenieApiKey());
         try {
-            GetIntegrationResponse resp = OGClient.GetIntegration(model.getId());
+            GetIntegrationResponse resp = OGClient.GetIntegration(model.getIntegrationId());
             model.setAllowWriteAccess(resp.getData().isAllowWriteAccess());
             model.setAllowReadAccess(resp.getData().isAllowReadAccess());
             model.setAllowDeleteAccess(resp.getData().isAllowDeleteAccess());
@@ -56,6 +56,8 @@ public class ReadHandler extends BaseHandler<CallbackContext> {
                     .status(OperationStatus.FAILED)
                     .build();
         }
+
+        logger.log("[READ] " + model.getIntegrationId());
         return ProgressEvent.<ResourceModel, CallbackContext>builder()
                 .resourceModel(model)
                 .status(OperationStatus.SUCCESS)
