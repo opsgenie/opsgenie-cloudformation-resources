@@ -1,6 +1,14 @@
 # Opsgenie Cloudformation Integration
 
 
+## Important Update
+
+*As for the June 24, we updated the SDK and our models.*
+
+That means if you try to update resources please be careful if rollback is enabled. 
+
+New version users will not affected of this issue
+
 
 ## Supported Resources
 
@@ -27,7 +35,7 @@
 aws cloudformation register-type \
 --region us-west-2 \
 --type-name "Atlassian::Opsgenie::User" \
---schema-handler-package "s3://opsgeniedownloads/cloudformation/atlassian-opsgenie-user.zip" \
+--schema-handler-package "s3://opsgeniedownloads/cloudformation/atlassian-opsgenie-user-$version.zip" \
 --type RESOURCE
 ```
 
@@ -36,7 +44,7 @@ aws cloudformation register-type \
 aws cloudformation register-type \
 --region us-west-2 \
 --type-name "Atlassian::Opsgenie::Team" \
---schema-handler-package "s3://opsgeniedownloads/cloudformation/atlassian-opsgenie-team.zip" \
+--schema-handler-package "s3://opsgeniedownloads/cloudformation/atlassian-opsgenie-team-$version.zip" \
 --type RESOURCE
 ```
 
@@ -46,7 +54,7 @@ aws cloudformation register-type \
 aws cloudformation register-type \
 --region us-west-2 \
 --type-name "Atlassian::Opsgenie::Integration" \
---schema-handler-package "s3://opsgeniedownloads/cloudformation/atlassian-opsgenie-integration.zip" \
+--schema-handler-package "s3://opsgeniedownloads/cloudformation/atlassian-opsgenie-integration-$version.zip" \
 --type RESOURCE
 ```
 
