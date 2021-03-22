@@ -1,0 +1,9 @@
+{
+  "CREATE": {
+    "/OpsgenieApiKey": "9e4f6868-f8e0-4f31-8e14-ac661604d692",
+    "/OpsgenieApiEndpoint": "https://api.opsgenie.com",
+    "/Role": "User",
+    "/FullName": "test user",
+    "/UserId": null
+  }
+}

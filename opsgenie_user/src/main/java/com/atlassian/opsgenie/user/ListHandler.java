@@ -25,6 +25,7 @@ public class ListHandler extends BaseHandler<CallbackContext> {
         try {
 
             ListUserResponse listUserResponse = OGClient.ListUsers();
+            logger.log(listUserResponse.toString());
             for (DataModel dataModel : listUserResponse.getDataModel()) {
                 if (!dataModel.getId().equals(request.getDesiredResourceState().getUserId())) {
                     continue;
