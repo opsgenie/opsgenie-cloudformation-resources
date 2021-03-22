@@ -25,7 +25,13 @@ public class UpdateHandler extends BaseHandler<CallbackContext> {
         usr.setRole(tmp);
         usr.setUsername(model.getUsername());
         try {
-            UpdateUserResponse resp = OGClient.UpdateUser(request.getDesiredResourceState().getUserId(), usr);
+            String id;
+            if (model.getUserId() != null && !model.getUserId().equals("")) {
+                id = model.getUserId();
+            } else {
+                id = model.getUsername();
+            }
+            UpdateUserResponse resp = OGClient.UpdateUser(id, usr);
             model.setUserId(request.getDesiredResourceState().getUserId());
 
         } catch (OpsgenieClientException e) {
@@ -37,8 +43,12 @@ public class UpdateHandler extends BaseHandler<CallbackContext> {
             if (e.getCode() == 429) {
                 errorCode = HandlerErrorCode.Throttling;
             }
+            if (e.getCode() == 404) {
+                errorCode = HandlerErrorCode.NotFound;
+            }
             return ProgressEvent.<ResourceModel, CallbackContext>builder()
                     .errorCode(errorCode)
+                    .message(e.getMessage())
                     .status(OperationStatus.FAILED)
                     .build();
         } catch (IOException e) {

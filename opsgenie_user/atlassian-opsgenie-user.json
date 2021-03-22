@@ -19,6 +19,7 @@
     },
     "Username": {
       "type": "string",
+      "pattern": "^[a-z0-9._+-]+@[a-z0-9]+\\.[a-z]{2,6}$",
       "description": "Opsgenie Username the mail address of the user",
       "minLength": 1
     },
@@ -41,12 +42,8 @@
     "Role",
     "OpsgenieApiKey"
   ],
-  "createOnlyProperties": [
+  "readOnlyProperties": [
     "/properties/UserId"
-  ],
-  "writeOnlyProperties": [
-    "/properties/OpsgenieApiKey",
-    "/properties/OpsgenieApiEndpoint"
   ],
   "primaryIdentifier": [
     "/properties/UserId"
@@ -57,17 +54,17 @@
         ""
       ]
     },
+    "delete": {
+      "permissions": [
+        ""
+      ]
+    },
     "read": {
       "permissions": [
         ""
       ]
     },
     "update": {
-      "permissions": [
-        ""
-      ]
-    },
-    "delete": {
       "permissions": [
         ""
       ]
