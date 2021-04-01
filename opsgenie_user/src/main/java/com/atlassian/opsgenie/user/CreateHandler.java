@@ -36,7 +36,7 @@ public class CreateHandler extends BaseHandler<CallbackContext> {
             model.setUserId(resp.getDataModel().getId());
             logger.log("ResourceModel: " + model.toString());
         } catch (OpsgenieClientException e) {
-            logger.log("og client:" + e.getMessage());
+            logger.log(e.getMessage());
             HandlerErrorCode errorCode = HandlerErrorCode.GeneralServiceException;
             if (e.getCode() == 409) {
                 errorCode = HandlerErrorCode.AlreadyExists;
@@ -58,8 +58,6 @@ public class CreateHandler extends BaseHandler<CallbackContext> {
         }
 
         logger.log("[CREATE] " + model.getUserId());
-
-        logger.log("final Resource model: " + model.toString());
         return ProgressEvent.<ResourceModel, CallbackContext>builder()
                 .resourceModel(model)
                 .status(OperationStatus.SUCCESS)

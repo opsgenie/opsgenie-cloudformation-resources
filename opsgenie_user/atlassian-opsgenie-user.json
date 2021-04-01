@@ -73,6 +73,11 @@
       "permissions": [
         ""
       ]
+    },
+    "list": {
+      "permissions": [
+        ""
+      ]
     }
   },
   "additionalProperties": false

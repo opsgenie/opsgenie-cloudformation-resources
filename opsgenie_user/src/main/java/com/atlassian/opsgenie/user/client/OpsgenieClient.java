@@ -43,7 +43,7 @@ public class OpsgenieClient {
 
     public void DeleteUser(String Id) throws IOException, OpsgenieClientException {
         Request request = new Request.Builder()
-                    .url(endPoint + "/v2/users/" + Id)
+                .url(endPoint + "/v2/users/" + Id)
                 .delete()
                 .addHeader("Authorization", "GenieKey " + this.apiKey)
                 .addHeader("User-Agent",userAgent)
@@ -61,7 +61,6 @@ public class OpsgenieClient {
                 .addHeader("Authorization", "GenieKey " + this.apiKey)
                 .addHeader("User-Agent",userAgent)
                 .build();
-        //throw new OpsgenieClientException(Id, 404);
         return objectMapper.readValue(execute(request), UpdateUserResponse.class);
 
     }

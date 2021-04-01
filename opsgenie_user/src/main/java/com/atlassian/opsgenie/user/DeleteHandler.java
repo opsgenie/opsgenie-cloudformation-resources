@@ -18,10 +18,8 @@ public class DeleteHandler extends BaseHandler<CallbackContext> {
         OpsgenieClient OGClient = new OpsgenieClient(model.getOpsgenieApiEndpoint(), model.getOpsgenieApiKey());
         try {
             if (model.getUserId() != null && !model.getUserId().equals("")) {
-                logger.log(" userId: "+ model.getUserId());
                 OGClient.DeleteUser(model.getUserId());
             } else {
-                logger.log(" userNam: "+ model.getUsername());
                 OGClient.DeleteUser(model.getUsername());
             }
         } catch (OpsgenieClientException e) {

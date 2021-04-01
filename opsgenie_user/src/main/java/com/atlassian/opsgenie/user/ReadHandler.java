@@ -25,7 +25,7 @@ public class ReadHandler extends BaseHandler<CallbackContext> {
                 logger.log(" userId: " + model.getUserId());
                 id = model.getUserId();
             } else {
-                logger.log(" userNam: " + model.getUsername());
+                logger.log(" userName: " + model.getUsername());
                 id = model.getUsername();
             }
             GetUserResponse resp = OGClient.GetUser(id);

@@ -12,7 +12,7 @@ public class OpsgenieClientException extends Exception {
      * Constructs an OpsGenieClientException with specified error message and error code.
      */
     public OpsgenieClientException(String message, int code) {
-        super(message+code);
+        super(message);
         this.code = code;
     }
 
