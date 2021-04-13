@@ -21,50 +21,20 @@ public class ListHandler extends BaseHandler<CallbackContext> {
 
         final List<ResourceModel> models = new ArrayList<>();
 
-        // TODO : put your code here
-
-
-
         OpsgenieClient ogClient = new OpsgenieClient(request.getDesiredResourceState().getOpsgenieApiKey(), request.getDesiredResourceState().getOpsgenieApiEndpoint());
 
         try {
             ListTeamResponse listTeamResponse = ogClient.ListTeam();
             for(TeamDataModel teamDataModel: listTeamResponse.getTeamDataModel()){
                 ResourceModel.ResourceModelBuilder resourceModelBuilder = ResourceModel.builder();
+                resourceModelBuilder.teamId(teamDataModel.getId());
+                resourceModelBuilder.name(teamDataModel.getName());
+                resourceModelBuilder.description(teamDataModel.getDescription());
 
-                ReadTeamResponse readTeamResponse = ogClient.ReadTeam(teamDataModel.getId());
-
-                resourceModelBuilder.teamId(readTeamResponse.getTeamDataModel().getId());
-                resourceModelBuilder.name(readTeamResponse.getTeamDataModel().getName());
-                resourceModelBuilder.description(readTeamResponse.getTeamDataModel().getDescription());
-
-                if(readTeamResponse.getTeamDataModel().getMembers() != null){
-                    List<Member> members = readTeamResponse.getTeamDataModel().getMembers().stream()
-                            .map(memberModel -> Member.builder()
-                                    .userId(memberModel.getUser().getId())
-                                    .role(memberModel.getRole())
-                                    .build())
-                            .collect(Collectors.toList());
-
-                    resourceModelBuilder.members(members);
-                }
 
                 resourceModelBuilder.opsgenieApiKey(request.getDesiredResourceState().getOpsgenieApiKey());
                 resourceModelBuilder.opsgenieApiEndpoint(request.getDesiredResourceState().getOpsgenieApiEndpoint());
 
-                /*models.add(ResourceModel.builder()
-                        .id(teamDataModel.getId())
-                        .name(teamDataModel.getName())
-                        .description(teamDataModel.getDescription())
-                        *//*.members(teamDataModel.getMembers().stream()
-                                .map(memberModel -> Member.builder()
-                                        .userId(memberModel.getUser().getId())
-                                        .role(memberModel.getRole())
-                                        .build())
-                                .collect(Collectors.toList()))*//*
-                        .apiKey(request.getDesiredResourceState().getApiKey())
-                        .apiEndpoint(request.getDesiredResourceState().getApiEndpoint())
-                        .build());*/
                 models.add(resourceModelBuilder.build());
             }
         } catch (IOException | OpsgenieClientException e) {
@@ -76,11 +46,6 @@ public class ListHandler extends BaseHandler<CallbackContext> {
                     .status(OperationStatus.FAILED)
                     .build();
         }
-
-        for (ResourceModel model: models) {
-            logger.log("[LIST] " + model.getTeamId());
-        }
-
         return ProgressEvent.<ResourceModel, CallbackContext>builder()
             .resourceModels(models)
             .status(OperationStatus.SUCCESS)

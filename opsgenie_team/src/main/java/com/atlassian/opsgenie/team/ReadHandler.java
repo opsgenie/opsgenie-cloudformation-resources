@@ -7,6 +7,7 @@ import com.atlassian.opsgenie.team.model.*;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Arrays;
 import java.util.stream.Collectors;
 
 public class ReadHandler extends BaseHandler<CallbackContext> {
@@ -29,14 +30,21 @@ public class ReadHandler extends BaseHandler<CallbackContext> {
 
             model.setName(readTeamResponse.getTeamDataModel().getName());
             model.setDescription(readTeamResponse.getTeamDataModel().getDescription());
-            List<Member> members = readTeamResponse.getTeamDataModel().getMembers().stream()
-                    .map(memberModel -> Member.builder()
-                            .userId(memberModel.getUser().getId())
-                            .role(memberModel.getRole())
-                            .build())
-                    .collect(Collectors.toList());
 
-            model.setMembers(members);
+            if(readTeamResponse.getTeamDataModel().getMembers()!=null) {
+
+                List<Member> members = readTeamResponse.getTeamDataModel().getMembers().stream()
+                        .map(memberModel -> Member.builder()
+                                .userId(memberModel.getUser().getId())
+                                .role(memberModel.getRole())
+                                .build())
+                        .collect(Collectors.toList());
+                model.setMembers(members);
+            }else {
+                model.setMembers(Arrays.asList());
+            }
+
+
         } catch (OpsgenieClientException e) {
             if(e.getCode() == 404){
                 logger.log(e.getMessage());

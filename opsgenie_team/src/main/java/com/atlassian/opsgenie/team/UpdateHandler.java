@@ -43,7 +43,8 @@ public class UpdateHandler extends BaseHandler<CallbackContext> {
                     .members(members)
                     .build());
 
-            ReadTeamResponse readTeamResponse = ogClient.ReadTeam(updateTeamResponse.getTeamDataModel().getId());
+
+            ReadTeamResponse readTeamResponse = ogClient.ReadTeam(model.getTeamId());
 
             model.setTeamId(readTeamResponse.getTeamDataModel().getId());
             model.setName(readTeamResponse.getTeamDataModel().getName());
@@ -67,6 +68,7 @@ public class UpdateHandler extends BaseHandler<CallbackContext> {
                 return ProgressEvent.<ResourceModel, CallbackContext>builder()
                         .errorCode(HandlerErrorCode.NotFound)
                         .status(OperationStatus.FAILED)
+                        .message(e.getMessage())
                         .build();
             }
         } catch (IOException e ){
@@ -76,6 +78,7 @@ public class UpdateHandler extends BaseHandler<CallbackContext> {
             return ProgressEvent.<ResourceModel, CallbackContext>builder()
                     .errorCode(HandlerErrorCode.InternalFailure)
                     .status(OperationStatus.FAILED)
+                    .message(e.getMessage())
                     .build();
         }
 

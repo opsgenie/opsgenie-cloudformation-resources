@@ -23,6 +23,7 @@ public class CreateHandler extends BaseHandler<CallbackContext> {
             final Logger logger) {
 
         final ResourceModel model = request.getDesiredResourceState();
+        CreateTeamResponse createTeamResponse;
 
         // TODO : put your code here
 
@@ -52,14 +53,15 @@ public class CreateHandler extends BaseHandler<CallbackContext> {
         }
 
         try {
-            CreateTeamResponse createTeamResponse = ogClient.CreateTeam(CreateTeamRequest.builder()
+            if(model.getTeamId()!=null){
+                throw new OpsgenieClientException("Invalid request",400);
+            }
+            CreateTeamRequest createTeamRequest=CreateTeamRequest.builder()
                     .name(model.getName())
                     .description(model.getDescription())
                     .members(members)
-                    .build());
-
-            model.setTeamId(createTeamResponse.getTeamDataModel().getId());
-
+                    .build();
+            createTeamResponse = ogClient.CreateTeam(createTeamRequest);
         } catch (OpsgenieClientException e) {
             if (e.getCode() == 409) {
                 return ProgressEvent.<ResourceModel, CallbackContext>builder()
@@ -70,6 +72,13 @@ public class CreateHandler extends BaseHandler<CallbackContext> {
             if (e.getCode() == 429) {
                 return ProgressEvent.<ResourceModel, CallbackContext>builder()
                         .errorCode(HandlerErrorCode.Throttling)
+                        .status(OperationStatus.FAILED)
+                        .build();
+            }
+            if (e.getCode() == 400) {
+                return ProgressEvent.<ResourceModel, CallbackContext>builder()
+                        .errorCode(HandlerErrorCode.InvalidRequest)
+                        .message(e.getMessage())
                         .status(OperationStatus.FAILED)
                         .build();
             }
@@ -91,7 +100,8 @@ public class CreateHandler extends BaseHandler<CallbackContext> {
                     .build();
         }
 
-        logger.log("[CREATE] " + model.getTeamId());
+        logger.log("[CREATE] " + createTeamResponse.getCreateTeamResponseData().getId());
+        model.setTeamId(createTeamResponse.getCreateTeamResponseData().getId());
         return ProgressEvent.<ResourceModel, CallbackContext>builder()
                 .resourceModel(model)
                 .status(OperationStatus.SUCCESS)

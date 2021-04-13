@@ -9,5 +9,5 @@ import lombok.EqualsAndHashCode;
 public class CreateTeamResponse extends OGResponse {
     
     @JsonProperty("data")
-    private TeamDataModel teamDataModel;
+    private CreateTeamResponseData createTeamResponseData;
 }
