@@ -16,6 +16,7 @@ public class DeleteHandler extends BaseHandler<CallbackContext> {
             final Logger logger) {
         ResourceModel model = request.getDesiredResourceState();
         OpsgenieClient OGClient = new OpsgenieClient(model.getOpsgenieApiEndpoint(), model.getOpsgenieApiKey());
+        logger.log(model.toString());
         try {
             if (model.getUserId() != null && !model.getUserId().equals("")) {
                 OGClient.DeleteUser(model.getUserId());
@@ -40,6 +41,14 @@ public class DeleteHandler extends BaseHandler<CallbackContext> {
         }
 
         logger.log("[DELETE] " + model.getUserId());
+        try
+        {
+            Thread.sleep(2000);
+        }
+        catch(InterruptedException ex)
+        {
+            Thread.currentThread().interrupt();
+        }
         return ProgressEvent.<ResourceModel, CallbackContext>builder()
                 .status(OperationStatus.SUCCESS)
                 .build();

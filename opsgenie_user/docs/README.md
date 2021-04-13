@@ -12,7 +12,6 @@ To declare this entity in your AWS CloudFormation template, use the following sy
 {
     "Type" : "Atlassian::Opsgenie::User",
     "Properties" : {
-        "<a href="#userid" title="UserId">UserId</a>" : <i>String</i>,
         "<a href="#opsgenieapiendpoint" title="OpsgenieApiEndpoint">OpsgenieApiEndpoint</a>" : <i>String</i>,
         "<a href="#opsgenieapikey" title="OpsgenieApiKey">OpsgenieApiKey</a>" : <i>String</i>,
         "<a href="#username" title="Username">Username</a>" : <i>String</i>,
@@ -27,7 +26,6 @@ To declare this entity in your AWS CloudFormation template, use the following sy
 <pre>
 Type: Atlassian::Opsgenie::User
 Properties:
-    <a href="#userid" title="UserId">UserId</a>: <i>String</i>
     <a href="#opsgenieapiendpoint" title="OpsgenieApiEndpoint">OpsgenieApiEndpoint</a>: <i>String</i>
     <a href="#opsgenieapikey" title="OpsgenieApiKey">OpsgenieApiKey</a>: <i>String</i>
     <a href="#username" title="Username">Username</a>: <i>String</i>
@@ -36,14 +34,6 @@ Properties:
 </pre>
 
 ## Properties
-
-#### UserId
-
-_Required_: No
-
-_Type_: String
-
-_Update requires_: [Replacement](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/using-cfn-updating-stacks-update-behaviors.html#update-replacement)
 
 #### OpsgenieApiEndpoint
 
@@ -77,9 +67,9 @@ _Type_: String
 
 _Minimum_: <code>1</code>
 
-_Pattern_: <code>^[a-z0-9._%+-]+@[a-z0-9]+\.[a-z]{2,6}$</code>
+_Pattern_: <code>^[a-z0-9._+-]+@[a-z0-9]+\.[a-z]{2,6}$</code>
 
-_Update requires_: [Replacement](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/using-cfn-updating-stacks-update-behaviors.html#update-replacement)
+_Update requires_: [No interruption](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/using-cfn-updating-stacks-update-behaviors.html#update-no-interrupt)
 
 #### FullName
 
@@ -93,7 +83,7 @@ _Minimum_: <code>1</code>
 
 _Pattern_: <code>^[a-zA-Z0-9- _.]+$</code>
 
-_Update requires_: [Replacement](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/using-cfn-updating-stacks-update-behaviors.html#update-replacement)
+_Update requires_: [No interruption](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/using-cfn-updating-stacks-update-behaviors.html#update-no-interrupt)
 
 #### Role
 
@@ -111,4 +101,15 @@ _Update requires_: [No interruption](https://docs.aws.amazon.com/AWSCloudFormati
 
 ### Ref
 
-When you pass the logical ID of this resource to the intrinsic `Ref` function, Ref returns the Username.
+When you pass the logical ID of this resource to the intrinsic `Ref` function, Ref returns the UserId.
+
+### Fn::GetAtt
+
+The `Fn::GetAtt` intrinsic function returns a value for a specified attribute of this type. The following are the available attributes and sample return values.
+
+For more information about using the `Fn::GetAtt` intrinsic function, see [Fn::GetAtt](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/intrinsic-function-reference-getatt.html).
+
+#### UserId
+
+Returns the <code>UserId</code> value.
+

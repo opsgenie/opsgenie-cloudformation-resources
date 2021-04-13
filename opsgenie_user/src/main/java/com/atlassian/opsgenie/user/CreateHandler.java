@@ -31,6 +31,9 @@ public class CreateHandler extends BaseHandler<CallbackContext> {
         usr.setUsername(model.getUsername());
         //todo add other fields in future
         try {
+            if(model.getUserId()!=null && !model.equals("")){
+                throw new OpsgenieClientException("Invalid request",400);
+            }
             logger.log("Sending request for creating user: " + usr.toString());
             AddUserResponse resp = OGClient.AddUser(usr);
             model.setUserId(resp.getDataModel().getId());
@@ -44,15 +47,20 @@ public class CreateHandler extends BaseHandler<CallbackContext> {
             if (e.getCode() == 429) {
                 errorCode = HandlerErrorCode.Throttling;
             }
+            if (e.getCode() == 400) {
+                errorCode = HandlerErrorCode.InvalidRequest;
+            }
             return ProgressEvent.<ResourceModel, CallbackContext>builder()
                     .errorCode(errorCode)
                     .resourceModel(model)
+                    .message(e.getMessage())
                     .status(OperationStatus.FAILED)
                     .build();
         } catch (IOException e) {
             return ProgressEvent.<ResourceModel, CallbackContext>builder()
                     .errorCode(HandlerErrorCode.InternalFailure)
                     .resourceModel(model)
+                    .message(e.getMessage())
                     .status(OperationStatus.FAILED)
                     .build();
         }
