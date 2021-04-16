@@ -19,7 +19,8 @@
           "pattern": "^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$"
         },
         "Role": {
-          "type": "string"
+          "type": "string",
+          "pattern": "^[a-zA-Z0-9-_.]+$"
         }
       }
     }
@@ -28,7 +29,7 @@
     "TeamId": {
       "description": "Team id",
       "type": "string",
-      "pattern": "^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$"
+      "pattern": "[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}"
     },
     "Name": {
       "description": "Team name",
@@ -38,7 +39,8 @@
     "Description": {
       "description": "Team description",
       "type": "string",
-      "minLength": 20,
+      "minLength": 1,
+      "pattern": "^[a-zA-Z0-9-_.]+$",
       "maxLength": 100
     },
     "Members": {
@@ -51,7 +53,7 @@
     "OpsgenieApiKey": {
       "description": "Api Key",
       "type": "string",
-      "pattern": "^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$"
+      "pattern": "[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}"
     },
     "OpsgenieApiEndpoint": {
       "description": "Api endpoint",
@@ -65,15 +67,8 @@
   "primaryIdentifier": [
     "/properties/TeamId"
   ],
-  "createOnlyProperties": [
-    "/properties/TeamId"
-  ],
-  "writeOnlyProperties": [
-    "/properties/OpsgenieApiKey",
-    "/properties/OpsgenieApiEndpoint"
-  ],
   "readOnlyProperties": [
-    "/properties/Name"
+    "/properties/TeamId"
   ],
   "handlers": {
     "create": {
