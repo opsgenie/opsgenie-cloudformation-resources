@@ -25,14 +25,10 @@ public class UpdateHandler extends BaseHandler<CallbackContext> {
         usr.setRole(tmp);
         usr.setUsername(model.getUsername());
         try {
-            logger.log("user" + usr.toString());
-            logger.log("id: "+request.getDesiredResourceState());
             String id;
             if (model.getUserId() != null && !model.getUserId().equals("")) {
-                logger.log(" userId: " + model.getUserId());
                 id = model.getUserId();
             } else {
-                logger.log(" userNam: " + model.getUsername());
                 id = model.getUsername();
             }
             UpdateUserResponse resp = OGClient.UpdateUser(id, usr);

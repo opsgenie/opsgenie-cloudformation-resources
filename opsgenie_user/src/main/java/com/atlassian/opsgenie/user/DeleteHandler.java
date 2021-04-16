@@ -41,14 +41,6 @@ public class DeleteHandler extends BaseHandler<CallbackContext> {
         }
 
         logger.log("[DELETE] " + model.getUserId());
-        try
-        {
-            Thread.sleep(2000);
-        }
-        catch(InterruptedException ex)
-        {
-            Thread.currentThread().interrupt();
-        }
         return ProgressEvent.<ResourceModel, CallbackContext>builder()
                 .status(OperationStatus.SUCCESS)
                 .build();
