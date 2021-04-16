@@ -20,7 +20,15 @@ public class ReadHandler extends BaseHandler<CallbackContext> {
         final ResourceModel model = request.getDesiredResourceState();
         OpsgenieClient OGClient = new OpsgenieClient(model.getOpsgenieApiEndpoint(), model.getOpsgenieApiKey());
         try {
-            GetUserResponse resp = OGClient.GetUser(model.getUserId());
+            String id;
+            if (model.getUserId() != null && !model.getUserId().equals("")) {
+                logger.log(" userId: " + model.getUserId());
+                id = model.getUserId();
+            } else {
+                logger.log(" userName: " + model.getUsername());
+                id = model.getUsername();
+            }
+            GetUserResponse resp = OGClient.GetUser(id);
             model.setFullName(resp.getDataModel().getFullName());
             model.setUsername(resp.getDataModel().getUsername());
             model.setRole(resp.getDataModel().getRole().getName());

@@ -1,4 +1,5 @@
 {
+    "artifact_type": "RESOURCE",
     "typeName": "Atlassian::Opsgenie::User",
     "language": "java",
     "runtime": "java8",
@@ -10,6 +11,8 @@
             "atlassian",
             "opsgenie",
             "user"
-        ]
-    }
+        ],
+        "protocolVersion": "2.0.0"
+    },
+    "executableEntrypoint": "com.atlassian.opsgenie.user.HandlerWrapperExecutable"
 }
