@@ -41,21 +41,22 @@ public class UpdateHandler extends BaseHandler<CallbackContext> {
             OGClient.UpdateIntegration(req);
 
         } catch (OpsgenieClientException e) {
-            logger.log(e.getMessage());
+            logger.log(e.getMessage()+e.getCode());
             HandlerErrorCode errorCode = HandlerErrorCode.GeneralServiceException;
             if (e.getCode() == 429) {
                 errorCode = HandlerErrorCode.Throttling;
             }
-            if (e.getCode() == 404) {
+            if (e.getCode() == 404 || e.getCode() == 422) {
                 errorCode = HandlerErrorCode.NotFound;
             }
 
-            if (e.getCode() == 409 || e.getCode() == 422) {
+            if (e.getCode() == 409 ) {
                 errorCode = HandlerErrorCode.ResourceConflict;
             }
 
             return ProgressEvent.<ResourceModel, CallbackContext>builder()
                     .errorCode(errorCode)
+                    .message(e.getMessage())
                     .status(OperationStatus.FAILED)
                     .build();
         } catch (IOException e) {

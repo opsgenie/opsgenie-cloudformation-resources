@@ -3,6 +3,7 @@ package com.atlassian.opsgenie.integration.client;
 import com.atlassian.opsgenie.integration.model.CreateIntegrationRequest;
 import com.atlassian.opsgenie.integration.model.CreateIntegrationResponse;
 import com.atlassian.opsgenie.integration.model.GetIntegrationResponse;
+import com.atlassian.opsgenie.integration.model.ListIntegrationResponse;
 import com.atlassian.opsgenie.integration.model.UpdateIntegrationRequest;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -83,6 +84,19 @@ public class OpsgenieClient {
                 .addHeader("User-Agent", userAgent)
                 .build();
         return objectMapper.readValue(execute(request), GetIntegrationResponse.class);
+
+    }
+
+    public ListIntegrationResponse ListIntegrations() throws IOException, OpsgenieClientException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        Request request = new Request.Builder()
+                .url(this.endpoint + "/v2/integrations?apiKey=" + this.apiKey)
+                .get()
+                .addHeader("Authorization", "GenieKey " + this.apiKey)
+                .addHeader("User-Agent", userAgent)
+                .build();
+        return objectMapper.readValue(execute(request), ListIntegrationResponse.class);
 
     }
 

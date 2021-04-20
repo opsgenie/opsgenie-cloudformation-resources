@@ -8,7 +8,13 @@
     },
     "OpsgenieEndpoint": {
       "Description": "Enter Opsgenie Api URL",
-      "Type": "String"
+      "Type": "String",
+      "Default": "https://api.opsgenie.com",
+      "AllowedValues": [
+        "https://api.opsgenie.com",
+        "https://api.eu.opsgenie.com",
+        "https://api.sandbox.opsgenie.com"
+      ]
     }
   },
   "Resources": {
@@ -21,8 +27,8 @@
         "OpsgenieApiEndpoint": {
           "Ref": "OpsgenieEndpoint"
         },
-        "IntegrationType": "Marid",
-        "Name": "test maridint",
+        "IntegrationType": "Auvik",
+        "Name": "test auvik integration",
 	"Enabled":true      
 	}
     }

@@ -40,7 +40,8 @@
       "minLength": 1
     },
     "IntegrationId": {
-      "type": "string"
+      "type": "string",
+      "pattern": "[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}"
     },
     "Enabled": {
       "type": "boolean",
@@ -104,22 +105,14 @@
     "Name"
   ],
   "primaryIdentifier": [
-    "/properties/IntegrationId",
-    "/properties/IntegrationApiKey",
-    "/properties/OpsgenieApiKey",
-    "/properties/OpsgenieApiEndpoint"
+    "/properties/IntegrationId"
   ],
   "readOnlyProperties": [
     "/properties/IntegrationId",
     "/properties/IntegrationApiKey"
   ],
-  "createOnlyProperties": [
-    "/properties/IntegrationId",
-    "/properties/IntegrationApiKey"
-  ],
   "writeOnlyProperties": [
-    "/properties/OpsgenieApiKey",
-    "/properties/OpsgenieApiEndpoint"
+    "/properties/OwnerTeamId"
   ],
   "handlers": {
     "create": {

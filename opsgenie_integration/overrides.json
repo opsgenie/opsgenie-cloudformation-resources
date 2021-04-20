@@ -1,0 +1,40 @@
+{
+  "CREATE": {
+    "/OpsgenieApiEndpoint": "",
+    "/OpsgenieApiKey": "",
+    "/Name": "Test-My-cfn-integration",
+    "/IntegrationType": "API",
+    "/OwnerTeamName": "CFN",
+    "/OwnerTeamId": null,
+    "/Enabled": true,
+    "/Responders": [
+      {
+        "type": "team",
+        "name": "CFN"
+      }
+    ],
+    "/AllowReadAccess": true,
+    "/AllowWriteAccess": true,
+    "/AllowDeleteAccess": true,
+    "/AllowConfigurationAccess": false
+  },
+  "UPDATE": {
+    "/OpsgenieApiEndpoint": "",
+    "/OpsgenieApiKey": "",
+    "/Name": "Test-My-cfn-integration",
+    "/IntegrationType": "API",
+    "/Enabled": true,
+    "/OwnerTeamName": "CFN",
+    "/OwnerTeamId": null,
+    "/Responders": [
+      {
+        "type": "team",
+        "name": "CFN"
+      }
+    ],
+    "/AllowReadAccess": true,
+    "/AllowWriteAccess": true,
+    "/AllowDeleteAccess": true,
+    "/AllowConfigurationAccess": false
+  }
+}

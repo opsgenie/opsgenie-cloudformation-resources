@@ -1,7 +1,7 @@
 package com.atlassian.opsgenie.integration;
 
 import software.amazon.cloudformation.proxy.*;
-import com.atlassian.opsgenie.integration.model.GetIntegrationResponse;
+import com.atlassian.opsgenie.integration.model.ListIntegrationResponse;
 import com.atlassian.opsgenie.integration.client.OpsgenieClient;
 import com.atlassian.opsgenie.integration.client.OpsgenieClientException;
 
@@ -21,25 +21,19 @@ public class ListHandler extends BaseHandler<CallbackContext> {
         final List<ResourceModel> models = new ArrayList<>();
 
         OpsgenieClient OGClient = new OpsgenieClient(request.getDesiredResourceState().getOpsgenieApiEndpoint(), request.getDesiredResourceState().getOpsgenieApiKey());
-        ResourceModel model = new ResourceModel();
+
         try {
-            GetIntegrationResponse resp = OGClient.GetIntegration(request.getDesiredResourceState().getIntegrationId());
-            model.setAllowWriteAccess(resp.getData().isAllowWriteAccess());
-            model.setAllowReadAccess(resp.getData().isAllowReadAccess());
-            model.setAllowDeleteAccess(resp.getData().isAllowDeleteAccess());
-            model.setAllowConfigurationAccess(resp.getData().isAllowConfigurationAccess());
-            model.setEnabled(resp.getData().isEnabled());
-            model.setIntegrationType(resp.getData().getType());
-            model.setName(resp.getData().getName());
-            model.setIntegrationId(request.getDesiredResourceState().getIntegrationId());
-            model.setOpsgenieApiKey(request.getDesiredResourceState().getOpsgenieApiKey());
-            model.setOpsgenieApiEndpoint(request.getDesiredResourceState().getOpsgenieApiEndpoint());
-            model.setIntegrationApiKey(request.getDesiredResourceState().getIntegrationApiKey());
-            model.setResponders(resp.getData().getRespondersPropertyList());
-            if (resp.getData().getOwnerTeam() != null) {
-                model.setOwnerTeamId(resp.getData().getOwnerTeam().getId());
-                model.setOwnerTeamName(resp.getData().getOwnerTeam().getName());
-            }
+            ListIntegrationResponse resp = OGClient.ListIntegrations();
+            logger.log(resp.toString());
+            resp.getData().stream().forEach(model -> {
+                ResourceModel resourceModel = new ResourceModel();
+                resourceModel.setName(model.getName());
+                resourceModel.setIntegrationType(model.getType());
+                resourceModel.setIntegrationId(model.getId());
+                resourceModel.setOpsgenieApiEndpoint(request.getDesiredResourceState().getOpsgenieApiEndpoint());
+                resourceModel.setOpsgenieApiKey(request.getDesiredResourceState().getOpsgenieApiKey());
+                models.add(resourceModel);
+            });
         } catch (IOException e) {
             logger.log(e.getMessage());
             e.printStackTrace();
@@ -56,11 +50,6 @@ public class ListHandler extends BaseHandler<CallbackContext> {
                     .errorCode(errorCode)
                     .status(OperationStatus.FAILED)
                     .build();
-        }
-        models.add(model);
-
-        for (ResourceModel _model: models) {
-            logger.log("[CREATE] " + _model.getIntegrationId());
         }
 
         return ProgressEvent.<ResourceModel, CallbackContext>builder()
