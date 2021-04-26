@@ -40,7 +40,6 @@ public class DeleteHandler extends BaseHandler<CallbackContext> {
 
         logger.log("[DELETE] " + model.getIntegrationId());
         return ProgressEvent.<ResourceModel, CallbackContext>builder()
-            .resourceModel(model)
             .status(OperationStatus.SUCCESS)
             .build();
     }

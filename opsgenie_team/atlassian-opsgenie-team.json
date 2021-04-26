@@ -34,13 +34,13 @@
     "Name": {
       "description": "Team name",
       "type": "string",
-      "pattern": "^[a-zA-Z0-9-_.]+$"
+      "pattern": "^[a-zA-Z0-9- _.]+$"
     },
     "Description": {
       "description": "Team description",
       "type": "string",
       "minLength": 1,
-      "pattern": "^[a-zA-Z0-9-_.]+$",
+      "pattern": "^[a-zA-Z0-9- _.]+$",
       "maxLength": 100
     },
     "Members": {

@@ -15,6 +15,11 @@ out/
 # auto-generated files
 target/
 env/
+docs/
+resource-role.yaml
+.hypothesis/
+.pytest_cache/
+
 # our logs
 rpdk.log
 

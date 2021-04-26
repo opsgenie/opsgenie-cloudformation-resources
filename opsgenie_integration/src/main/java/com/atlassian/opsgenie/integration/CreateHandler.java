@@ -50,6 +50,7 @@ public class CreateHandler extends BaseHandler<CallbackContext> {
         } else if (model.getOwnerTeamName() != null) {
             OwnerTeam ownerTeam = new OwnerTeam();
             ownerTeam.setName(model.getOwnerTeamName());
+            ownerTeam.setId(null);
             req.setOwnerTeam(ownerTeam);
         }
         req.setName(model.getName());
@@ -69,6 +70,9 @@ public class CreateHandler extends BaseHandler<CallbackContext> {
 
         try {
             logger.log("[CREATE] Request data: " + req.toString());
+            if(model.getIntegrationId()!=null && !model.getIntegrationId().equals("")){
+                throw new OpsgenieClientException("Invalid request",400);
+            }
             CreateIntegrationResponse resp = OGClient.CreateIntegration(req);
             model.setIntegrationId(resp.getData().getId());
             model.setIntegrationApiKey(resp.getData().getApiKey());
@@ -81,14 +85,19 @@ public class CreateHandler extends BaseHandler<CallbackContext> {
             if (e.getCode() == 429) {
                 errorCode = HandlerErrorCode.Throttling;
             }
+            if (e.getCode() == 400) {
+                errorCode = HandlerErrorCode.InvalidRequest;
+            }
             return ProgressEvent.<ResourceModel, CallbackContext>builder()
                     .errorCode(errorCode)
+                    .message(e.getMessage())
                     .status(OperationStatus.FAILED)
                     .build();
         } catch (IOException e) {
             logger.log(e.getMessage());
             return ProgressEvent.<ResourceModel, CallbackContext>builder()
                     .errorCode(HandlerErrorCode.InternalFailure)
+                    .message(e.getMessage())
                     .status(OperationStatus.FAILED)
                     .build();
         }
