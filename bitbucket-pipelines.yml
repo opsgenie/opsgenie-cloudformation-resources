@@ -1,0 +1,158 @@
+clone:
+  depth: 10
+
+image:
+  name: docker-public.packages.atlassian.com/atlassian/bitbucket-pipelines-mvn-python3-awscli
+
+
+pipelines:
+  custom:
+    Publish-Integration-Resource:
+      - variables:
+        - name: REGION
+
+      - step:
+          name: Build and Register Resource
+          oidc: true
+          script:
+            - cd opsgenie_integration
+            - export AWS_REGION=$REGION
+            - export AWS_ROLE_ARN=${ROLE_ARN}
+            - export AWS_WEB_IDENTITY_TOKEN_FILE=$(pwd)/web-identity-token
+            - export RESOURCE_NAME=Atlassian::Opsgenie::Integration
+            - export RESOURCE_PACKAGE=atlassian-opsgenie-integration
+            - echo $BITBUCKET_STEP_OIDC_TOKEN > $(pwd)/web-identity-token
+            - ../script.sh
+            - ../register-resource.sh
+
+      - step:
+          name: Run Contract Test
+          oidc: true
+          script:
+            - cd opsgenie_integration
+            - export AWS_REGION=$REGION
+            - export AWS_ROLE_ARN=${ROLE_ARN}
+            - export AWS_WEB_IDENTITY_TOKEN_FILE=$(pwd)/web-identity-token
+            - export RESOURCE_NAME=Atlassian::Opsgenie::Integration
+            - echo $BITBUCKET_STEP_OIDC_TOKEN > $(pwd)/web-identity-token
+            - ../test-check.sh
+
+      - step:
+          name: Publish Resource
+          oidc: true
+          trigger: manual
+          script:
+            - cd opsgenie_integration
+            - export AWS_REGION=$REGION
+            - export AWS_ROLE_ARN=${ROLE_ARN}
+            - export AWS_WEB_IDENTITY_TOKEN_FILE=$(pwd)/web-identity-token
+            - echo $BITBUCKET_STEP_OIDC_TOKEN > $(pwd)/web-identity-token
+            - export RESOURCE_NAME=Atlassian::Opsgenie::Integration
+            - VERSION=$(mvn -q -Dexec.executable=echo -Dexec.args='${project.version}' --non-recursive exec:exec)
+            - aws cloudformation publish-type --type RESOURCE --type-name $RESOURCE_NAME  --public-version-number $VERSION
+
+
+    Publish-Team-Resource:
+      - variables:
+        - name: REGION
+      - step:
+          name: Build and Register Resource
+          oidc: true
+          script:
+            - cd opsgenie_team
+            - export AWS_REGION=$REGION
+            - export AWS_ROLE_ARN=${ROLE_ARN}
+            - export AWS_WEB_IDENTITY_TOKEN_FILE=$(pwd)/web-identity-token
+            - export RESOURCE_NAME=Atlassian::Opsgenie::Team
+            - export RESOURCE_PACKAGE=atlassian-opsgenie-team
+            - echo $BITBUCKET_STEP_OIDC_TOKEN > $(pwd)/web-identity-token
+            - ../script.sh
+            - ../register-resource.sh
+
+      - step:
+          name: Run Contract Test
+          oidc: true
+          script:
+            - cd opsgenie_team
+            - export AWS_REGION=$REGION
+            - export AWS_ROLE_ARN=${ROLE_ARN}
+            - export AWS_WEB_IDENTITY_TOKEN_FILE=$(pwd)/web-identity-token
+            - export RESOURCE_NAME=Atlassian::Opsgenie::Team
+            - echo $BITBUCKET_STEP_OIDC_TOKEN > $(pwd)/web-identity-token
+            - ../test-check.sh
+      - step:
+          name: Publish Resource
+          oidc: true
+          trigger: manual
+          script:
+            - cd opsgenie_integration
+            - export AWS_REGION=$REGION
+            - export AWS_ROLE_ARN=${ROLE_ARN}
+            - export AWS_WEB_IDENTITY_TOKEN_FILE=$(pwd)/web-identity-token
+            - export RESOURCE_NAME=Atlassian::Opsgenie::Team
+            - echo $BITBUCKET_STEP_OIDC_TOKEN > $(pwd)/web-identity-token
+            - VERSION=$(mvn -q -Dexec.executable=echo -Dexec.args='${project.version}' --non-recursive exec:exec)
+            - aws cloudformation publish-type --type RESOURCE --type-name $RESOURCE_NAME --public-version-number $VERSION
+
+
+    Publish-User-Resource:
+      - variables:
+        - name: REGION
+      - step:
+          name: Build and Register Resource
+          oidc: true
+          script:
+            - cd opsgenie_user
+            - export AWS_REGION=$REGION
+            - export AWS_ROLE_ARN=${ROLE_ARN}
+            - export AWS_WEB_IDENTITY_TOKEN_FILE=$(pwd)/web-identity-token
+            - export RESOURCE_NAME=Atlassian::Opsgenie::User
+            - export RESOURCE_PACKAGE=atlassian-opsgenie-user
+            - echo $BITBUCKET_STEP_OIDC_TOKEN > $(pwd)/web-identity-token
+            - ../script.sh
+            - ../register-resource.sh
+
+      - step:
+          name: Run Contract Test
+          oidc: true
+          script:
+            - cd opsgenie_user
+            - export AWS_REGION=$REGION
+            - export AWS_ROLE_ARN=${ROLE_ARN}
+            - export AWS_WEB_IDENTITY_TOKEN_FILE=$(pwd)/web-identity-token
+            - export RESOURCE_NAME=Atlassian::Opsgenie::User
+            - echo $BITBUCKET_STEP_OIDC_TOKEN > $(pwd)/web-identity-token
+            - ../test-check.sh
+
+      - step:
+          name: Publish Resource
+          oidc: true
+          trigger: manual
+          script:
+            - cd opsgenie_integration
+            - export AWS_REGION=$REGION
+            - export AWS_ROLE_ARN=${ROLE_ARN}
+            - export AWS_WEB_IDENTITY_TOKEN_FILE=$(pwd)/web-identity-token
+            - export RESOURCE_NAME=Atlassian::Opsgenie::User
+            - echo $BITBUCKET_STEP_OIDC_TOKEN > $(pwd)/web-identity-token
+            - VERSION=$(mvn -q -Dexec.executable=echo -Dexec.args='${project.version}' --non-recursive exec:exec)
+            - aws cloudformation publish-type --type RESOURCE --type-name $RESOURCE_NAME --public-version-number $VERSION
+
+
+    Register-Publisher:
+      - variables:
+        - name: REGION
+      - step:
+          name: Build Resource and Register Resource
+          oidc: true
+          script:
+            - export AWS_REGION=$REGION
+            - export AWS_ROLE_ARN=${ROLE_ARN}
+            - export AWS_WEB_IDENTITY_TOKEN_FILE=$(pwd)/web-identity-token
+            - echo $BITBUCKET_STEP_OIDC_TOKEN > $(pwd)/web-identity-token
+            - aws cloudformation register-publisher --connection-arn $CONNECTION_ARN --accept-terms-and-conditions
+  pull-requests:
+    master:
+      - step:
+          Build Check:
+            - mvn package
