@@ -45,6 +45,10 @@
   "readOnlyProperties": [
     "/properties/UserId"
   ],
+  "createOnlyProperties": [
+    "/properties/Username",
+    "/properties/FullName"
+  ],
   "primaryIdentifier": [
     "/properties/UserId"
   ],

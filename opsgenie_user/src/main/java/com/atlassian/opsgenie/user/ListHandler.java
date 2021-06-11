@@ -6,7 +6,7 @@ import com.atlassian.opsgenie.user.client.OpsgenieClientException;
 import com.atlassian.opsgenie.user.model.DataModel;
 import com.atlassian.opsgenie.user.model.ListUserResponse;
 
-import javax.annotation.Resource;
+//import javax.annotation.Resource;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
