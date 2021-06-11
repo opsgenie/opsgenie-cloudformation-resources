@@ -5,10 +5,17 @@
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
+
+    <parent>
+        <groupId>com.atlassian.opsgenie</groupId>
+        <artifactId>opsgenie-cloudformation-resources</artifactId>
+        <version>1.0.0</version>
+    </parent>
+
     <groupId>com.atlassian.opsgenie.team</groupId>
     <artifactId>atlassian-opsgenie-team-handler</artifactId>
     <name>atlassian-opsgenie-team-handler</name>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0.0</version>
     <packaging>jar</packaging>
 
     <properties>
@@ -24,58 +31,6 @@
             <url>http://central.maven.org/maven2</url>
         </repository>
     </repositories>
-
-    <dependencies>
-         <!-- https://github.com/aws-cloudformation/aws-cloudformation-rpdk-java-plugin/ -->
-        <dependency>
-            <groupId>software.amazon.cloudformation</groupId>
-            <artifactId>aws-cloudformation-rpdk-java-plugin</artifactId>
-            <version>2.0.3</version>
-        </dependency>
-        <!-- https://mvnrepository.com/artifact/org.projectlombok/lombok -->
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <version>1.18.4</version>
-            <scope>provided</scope>
-        </dependency>
-
-        <!-- https://mvnrepository.com/artifact/org.assertj/assertj-core -->
-        <dependency>
-            <groupId>org.assertj</groupId>
-            <artifactId>assertj-core</artifactId>
-            <version>3.12.2</version>
-            <scope>test</scope>
-        </dependency>
-        <!-- https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter -->
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter</artifactId>
-            <version>5.5.0-M1</version>
-            <scope>test</scope>
-        </dependency>
-        <!-- https://mvnrepository.com/artifact/org.mockito/mockito-core -->
-        <dependency>
-            <groupId>org.mockito</groupId>
-            <artifactId>mockito-core</artifactId>
-            <version>2.26.0</version>
-            <scope>test</scope>
-        </dependency>
-        <!-- https://mvnrepository.com/artifact/org.mockito/mockito-junit-jupiter -->
-        <dependency>
-            <groupId>org.mockito</groupId>
-            <artifactId>mockito-junit-jupiter</artifactId>
-            <version>2.26.0</version>
-            <scope>test</scope>
-        </dependency>
-
-        <!-- Custom -->
-        <dependency>
-            <groupId>com.squareup.okhttp3</groupId>
-            <artifactId>okhttp</artifactId>
-            <version>4.2.0</version>
-        </dependency>
-    </dependencies>
 
     <build>
         <plugins>
