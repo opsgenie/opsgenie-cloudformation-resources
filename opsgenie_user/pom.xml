@@ -24,6 +24,14 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     </properties>
 
+    <dependencies>
+        <dependency>
+            <groupId>software.amazon.cloudformation</groupId>
+            <artifactId>aws-cloudformation-rpdk-java-plugin</artifactId>
+            <version>2.0.3</version>
+        </dependency>
+    </dependencies>
+
     <repositories>
         <repository>
             <id>central</id>
@@ -64,7 +72,7 @@
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>exec-maven-plugin</artifactId>
                 <version>1.6.0</version>
-               <executions>
+                <executions>
                     <execution>
                         <id>generate</id>
                         <phase>generate-sources</phase>

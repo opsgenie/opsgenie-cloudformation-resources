@@ -1,0 +1,5 @@
+cloudformation-cli==0.2.12
+cloudformation-cli-go-plugin==2.0.4
+cloudformation-cli-java-plugin==2.0.5
+cloudformation-cli-python-plugin==2.1.3
+cloudformation-cli-typescript-plugin==1.0.0
