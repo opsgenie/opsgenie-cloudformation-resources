@@ -8,13 +8,13 @@
     <groupId>com.atlassian.opsgenie.integration</groupId>
     <artifactId>atlassian-opsgenie-integration-handler</artifactId>
     <name>atlassian-opsgenie-integration-handler</name>
-    <version>1.0.0</version>
+    <version>1.0.1</version>
     <packaging>jar</packaging>
 
     <parent>
         <groupId>com.atlassian.opsgenie</groupId>
         <artifactId>opsgenie-cloudformation-resources</artifactId>
-        <version>1.0.0</version>
+        <version>1.0.1</version>
     </parent>
 
     <properties>

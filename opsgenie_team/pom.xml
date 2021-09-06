@@ -9,13 +9,13 @@
     <parent>
         <groupId>com.atlassian.opsgenie</groupId>
         <artifactId>opsgenie-cloudformation-resources</artifactId>
-        <version>1.0.0</version>
+        <version>1.0.1</version>
     </parent>
 
     <groupId>com.atlassian.opsgenie.team</groupId>
     <artifactId>atlassian-opsgenie-team-handler</artifactId>
     <name>atlassian-opsgenie-team-handler</name>
-    <version>1.0.0</version>
+    <version>1.0.1</version>
     <packaging>jar</packaging>
 
     <properties>
