@@ -46,7 +46,7 @@ public class UpdateHandler extends BaseHandler<CallbackContext> {
             if (e.getCode() == 429) {
                 errorCode = HandlerErrorCode.Throttling;
             }
-            if (e.getCode() == 404 || e.getCode() == 422) {
+            if (e.getCode() == 404 || e.getCode() == 422 || e.getCode() == 403) {
                 errorCode = HandlerErrorCode.NotFound;
             }
 

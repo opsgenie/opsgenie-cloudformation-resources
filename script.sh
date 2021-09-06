@@ -10,7 +10,7 @@ def updateJsonFile():
         data = json.load(f)
         data["CREATE"]["/OpsgenieApiKey"]= os.environ['OPSGENIE_API_KEY']
         data["CREATE"]["/OpsgenieApiEndpoint"]= os.environ['OPSGENIE_API_ENDPOINT']
-        if hasattr( data ,"UPDATE"):
+        if "UPDATE" in data:
           data["UPDATE"]["/OpsgenieApiKey"]= os.environ['OPSGENIE_API_KEY']
           data["UPDATE"]["/OpsgenieApiEndpoint"]= os.environ['OPSGENIE_API_ENDPOINT']
         print(data);
