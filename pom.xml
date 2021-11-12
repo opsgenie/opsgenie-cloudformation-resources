@@ -13,6 +13,7 @@
         <module>opsgenie_user</module>
         <module>opsgenie_team</module>
         <module>opsgenie_integration</module>
+        <module>opsgenie_schedule</module>
     </modules>
 
     <properties>

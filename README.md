@@ -26,6 +26,9 @@ Old version: *v1.0*
 - Opsgenie Integration
 
 
+- Opsgenie Schedule
+
+
 
 ## Installation
 
@@ -57,6 +60,16 @@ aws cloudformation register-type \
 --region us-west-2 \
 --type-name "Atlassian::Opsgenie::Integration" \
 --schema-handler-package "s3://opsgeniedownloads/cloudformation/atlassian-opsgenie-integration-v1.1.zip" \
+--type RESOURCE
+```
+
+
+- Opsgenie Schedule resource
+```
+aws cloudformation register-type \
+--region us-west-2 \
+--type-name "Atlassian::Opsgenie::Schedule" \
+--schema-handler-package "s3://opsgeniedownloads/cloudformation/atlassian-opsgenie-schedule-v1.1.zip" \
 --type RESOURCE
 ```
 

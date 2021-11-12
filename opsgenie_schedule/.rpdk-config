@@ -1,0 +1,18 @@
+{
+    "artifact_type": "RESOURCE",
+    "typeName": "Atlassian::Opsgenie::Schedule",
+    "language": "java",
+    "runtime": "java8",
+    "entrypoint": "com.atlassian.opsgenie.schedule.HandlerWrapper::handleRequest",
+    "testEntrypoint": "com.atlassian.opsgenie.schedule.HandlerWrapper::testEntrypoint",
+    "settings": {
+        "namespace": [
+            "com",
+            "atlassian",
+            "opsgenie",
+            "schedule"
+        ],
+        "protocolVersion": "2.0.0"
+    },
+    "executableEntrypoint": "com.atlassian.opsgenie.schedule.HandlerWrapperExecutable"
+}
