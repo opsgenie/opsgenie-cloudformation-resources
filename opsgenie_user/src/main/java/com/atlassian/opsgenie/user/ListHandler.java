@@ -1,65 +1,44 @@
 package com.atlassian.opsgenie.user;
 
-import software.amazon.cloudformation.proxy.*;
 import com.atlassian.opsgenie.user.client.OpsgenieClient;
 import com.atlassian.opsgenie.user.client.OpsgenieClientException;
 import com.atlassian.opsgenie.user.model.DataModel;
 import com.atlassian.opsgenie.user.model.ListUserResponse;
+import software.amazon.cloudformation.proxy.*;
 
-//import javax.annotation.Resource;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ListHandler extends BaseHandler<CallbackContext> {
+import static com.atlassian.opsgenie.user.Helper.*;
+
+public class ListHandler extends BaseHandler<CallbackContext, TypeConfigurationModel> {
 
     @Override
-    public ProgressEvent<ResourceModel, CallbackContext> handleRequest(
-            final AmazonWebServicesClientProxy proxy,
-            final ResourceHandlerRequest<ResourceModel> request,
-            final CallbackContext callbackContext,
-            final Logger logger) {
+    public ProgressEvent<ResourceModel, CallbackContext> handleRequest(AmazonWebServicesClientProxy proxy, ResourceHandlerRequest<ResourceModel> request, CallbackContext callbackContext,
+                                                                       Logger logger, TypeConfigurationModel typeConfiguration) {
 
         final List<ResourceModel> models = new ArrayList<>();
-        OpsgenieClient OGClient = new OpsgenieClient(request.getDesiredResourceState().getOpsgenieApiEndpoint(), request.getDesiredResourceState().getOpsgenieApiKey());
+        final ResourceModel model = request.getDesiredResourceState();
         try {
-
+            OpsgenieClient OGClient = CreateOGClient(typeConfiguration);
+            Delay(typeConfiguration);
             ListUserResponse listUserResponse = OGClient.ListUsers();
             for (DataModel dataModel : listUserResponse.getDataModel()) {
-                if (!dataModel.getId().equals(request.getDesiredResourceState().getUserId())) {
-                    continue;
-                }
-                ResourceModel tmp = new ResourceModel();
-                tmp.setRole(dataModel.getRole().getName());
-                tmp.setOpsgenieApiEndpoint(request.getDesiredResourceState().getOpsgenieApiEndpoint());
-                tmp.setOpsgenieApiKey(request.getDesiredResourceState().getOpsgenieApiKey());
-                tmp.setUsername(dataModel.getUsername());
-                tmp.setFullName(dataModel.getFullName());
-                tmp.setUserId(dataModel.getId());
-                models.add(tmp);
+                ResourceModel resourceModel = new ResourceModel();
+                resourceModel.setRole(dataModel.getRole()
+                                               .getName());
+                resourceModel.setUsername(dataModel.getUsername());
+                resourceModel.setFullName(dataModel.getFullName());
+                resourceModel.setUserId(dataModel.getId());
+                models.add(resourceModel);
             }
         } catch (OpsgenieClientException e) {
-            HandlerErrorCode errorCode = HandlerErrorCode.GeneralServiceException;
-            if (e.getCode() == 404) {
-                errorCode = HandlerErrorCode.NotFound;
-            }
-            if (e.getCode() == 429) {
-                errorCode = HandlerErrorCode.Throttling;
-            }
-            logger.log(e.getMessage());
-            return ProgressEvent.<ResourceModel, CallbackContext>builder()
-                    .errorCode(errorCode)
-                    .status(OperationStatus.FAILED)
-                    .build();
+            return GetServiceFailureResponse(e.getCode(), e.getMessage());
         } catch (IOException e) {
-            e.printStackTrace();
-            return ProgressEvent.<ResourceModel, CallbackContext>builder()
-                    .status(OperationStatus.FAILED)
-                    .build();
-        }
-
-        for(ResourceModel model: models) {
-            logger.log("[CREATE] " + model.getUserId());
+            return GetInternalFailureResponse(e.getMessage());
+        } catch (InterruptedException e) {
+            return GetInternalFailureResponse(e.getMessage());
         }
 
         return ProgressEvent.<ResourceModel, CallbackContext>builder()

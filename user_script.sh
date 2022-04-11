@@ -10,6 +10,10 @@ def generateTypeConfigurationJson():
       'OpsgenieCredentials' : {
           'OpsgenieApiEndpoint' : os.getenv('OPSGENIE_API_ENDPOINT','https://api.opsgenie.com'),
           'OpsgenieApiKey' :  os.getenv('OPSGENIE_API_KEY',"")
+      },
+      'ContractTestSettings': {
+          'DelayEnabled' : os.getenv('DELAY_ENABLED','true').lower() in ('true', '1', 'yes'),
+          'DelaySeconds' : int(os.getenv('DELAY_SECONDS','10')),
       }
   }
   with open('typeConfiguration.json', 'w+') as f:

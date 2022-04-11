@@ -1,71 +1,88 @@
 package com.atlassian.opsgenie.integration;
 
-import software.amazon.cloudformation.proxy.*;
 import com.atlassian.opsgenie.integration.client.OpsgenieClient;
 import com.atlassian.opsgenie.integration.client.OpsgenieClientException;
-import com.atlassian.opsgenie.integration.model.*;
+import com.atlassian.opsgenie.integration.model.GetIntegrationResponse;
+import com.atlassian.opsgenie.integration.model.OwnerTeam;
+import com.atlassian.opsgenie.integration.model.UpdateIntegrationRequest;
+import org.apache.commons.lang3.StringUtils;
+import software.amazon.cloudformation.proxy.*;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
-public class UpdateHandler extends BaseHandler<CallbackContext> {
+import static com.atlassian.opsgenie.integration.Helper.*;
+
+public class UpdateHandler extends BaseHandler<CallbackContext, TypeConfigurationModel> {
 
     @Override
-    public ProgressEvent<ResourceModel, CallbackContext> handleRequest(
-            final AmazonWebServicesClientProxy proxy,
-            final ResourceHandlerRequest<ResourceModel> request,
-            final CallbackContext callbackContext,
-            final Logger logger) {
+    public ProgressEvent<ResourceModel, CallbackContext> handleRequest(AmazonWebServicesClientProxy proxy, ResourceHandlerRequest<ResourceModel> request, CallbackContext callbackContext,
+                                                                       Logger logger, TypeConfigurationModel typeConfiguration) {
 
+        final List<ResourceModel> models = new ArrayList<>();
         final ResourceModel model = request.getDesiredResourceState();
-
-        OpsgenieClient OGClient = new OpsgenieClient(model.getOpsgenieApiEndpoint(), model.getOpsgenieApiKey());
-        UpdateIntegrationRequest req = new UpdateIntegrationRequest();
-
-        model.setIntegrationApiKey(request.getPreviousResourceState().getIntegrationApiKey());
-        if (model.getOwnerTeamId() != null) {
-            OwnerTeam ownerTeam = new OwnerTeam();
-            ownerTeam.setId(model.getOwnerTeamId());
-            req.setOwnerTeam(ownerTeam);
-        } else if (model.getOwnerTeamName() != null) {
-            OwnerTeam ownerTeam = new OwnerTeam();
-            ownerTeam.setName(model.getOwnerTeamName());
-            req.setOwnerTeam(ownerTeam);
-        }
-        req.setName(model.getName());
-        req.setType(model.getIntegrationType());
-        req.setRespondersPropertyList(model.getResponders());
-        req.setId(model.getIntegrationId());
-        req.setEnabled(model.getEnabled());
-
         try {
-            OGClient.UpdateIntegration(req);
+            OpsgenieClient OGClient = CreateOGClient(typeConfiguration);
+            if (StringUtils.isEmpty(model.getIntegrationId())) {
+                return GetServiceFailureResponse(404, "IntegrationId must be provided.");
+            }
+
+            GetIntegrationResponse getIntegrationResponse = OGClient.GetIntegration(model.getIntegrationId());
+            UpdateIntegrationRequest updateIntegrationRequest = new UpdateIntegrationRequest();
+
+            updateIntegrationRequest.setEnabled(getIntegrationResponse.getData()
+                                                                      .isEnabled());
+            updateIntegrationRequest.setId(getIntegrationResponse.getData()
+                                                                 .getId());
+            updateIntegrationRequest.setOwnerTeam(getIntegrationResponse.getData()
+                                                                        .getOwnerTeam());
+            updateIntegrationRequest.setName(getIntegrationResponse.getData()
+                                                                   .getName());
+            updateIntegrationRequest.setType(getIntegrationResponse.getData()
+                                                                   .getType());
+            updateIntegrationRequest.setIgnoreRespondersFromPayload(getIntegrationResponse.getData()
+                                                                                          .isIgnoreRespondersFromPayload());
+            updateIntegrationRequest.setIgnoreTeamsFromPayload(getIntegrationResponse.getData()
+                                                                                     .isIgnoreTeamsFromPayload());
+            updateIntegrationRequest.setRespondersPropertyList(getIntegrationResponse.getData()
+                                                                                     .getRespondersPropertyList());
+            updateIntegrationRequest.setSuppressNotifications(getIntegrationResponse.getData()
+                                                                                    .isSuppressNotifications());
+
+            updateIntegrationRequest.setId(model.getIntegrationId());
+
+            if (model.getOwnerTeamId() != null) {
+                OwnerTeam ownerTeam = new OwnerTeam();
+                ownerTeam.setId(model.getOwnerTeamId());
+                updateIntegrationRequest.setOwnerTeam(ownerTeam);
+            } else if (model.getOwnerTeamName() != null) {
+                OwnerTeam ownerTeam = new OwnerTeam();
+                ownerTeam.setName(model.getOwnerTeamName());
+                updateIntegrationRequest.setOwnerTeam(ownerTeam);
+            }
+            if (model.getName() != null) {
+                updateIntegrationRequest.setName(model.getName());
+            }
+
+            if (model.getIntegrationType() != null) {
+                updateIntegrationRequest.setType(model.getIntegrationType());
+            }
+
+            if (model.getResponders() != null) {
+                updateIntegrationRequest.setRespondersPropertyList(model.getResponders());
+            }
+
+            if (model.getEnabled() != null) {
+                updateIntegrationRequest.setEnabled(model.getEnabled());
+            }
+
+            OGClient.UpdateIntegration(updateIntegrationRequest);
 
         } catch (OpsgenieClientException e) {
-            logger.log(e.getMessage()+e.getCode());
-            HandlerErrorCode errorCode = HandlerErrorCode.GeneralServiceException;
-            if (e.getCode() == 429) {
-                errorCode = HandlerErrorCode.Throttling;
-            }
-            if (e.getCode() == 404 || e.getCode() == 422 || e.getCode() == 403) {
-                errorCode = HandlerErrorCode.NotFound;
-            }
-
-            if (e.getCode() == 409 ) {
-                errorCode = HandlerErrorCode.ResourceConflict;
-            }
-
-            return ProgressEvent.<ResourceModel, CallbackContext>builder()
-                    .errorCode(errorCode)
-                    .message(e.getMessage())
-                    .status(OperationStatus.FAILED)
-                    .build();
+            return GetServiceFailureResponse(e.getCode(), e.getMessage());
         } catch (IOException e) {
-            logger.log(e.getMessage());
-            return ProgressEvent.<ResourceModel, CallbackContext>builder()
-                    .message(e.getMessage())
-                    .errorCode(HandlerErrorCode.InternalFailure)
-                    .status(OperationStatus.FAILED)
-                    .build();
+            return GetInternalFailureResponse(e.getMessage());
         }
 
         logger.log("[UPDATE] " + model.getIntegrationId());

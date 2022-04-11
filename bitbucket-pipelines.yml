@@ -22,7 +22,6 @@ pipelines:
             - export RESOURCE_NAME=Atlassian::Opsgenie::Integration
             - export RESOURCE_PACKAGE=atlassian-opsgenie-integration
             - echo $BITBUCKET_STEP_OIDC_TOKEN > $(pwd)/web-identity-token
-            - ../script.sh
             - ../register-resource.sh
 
       - step:
@@ -35,6 +34,7 @@ pipelines:
             - export AWS_WEB_IDENTITY_TOKEN_FILE=$(pwd)/web-identity-token
             - export RESOURCE_NAME=Atlassian::Opsgenie::Integration
             - echo $BITBUCKET_STEP_OIDC_TOKEN > $(pwd)/web-identity-token
+            - ../script.sh
             - ../test-check.sh
 
       - step:
@@ -66,7 +66,6 @@ pipelines:
             - export RESOURCE_NAME=Atlassian::Opsgenie::Team
             - export RESOURCE_PACKAGE=atlassian-opsgenie-team
             - echo $BITBUCKET_STEP_OIDC_TOKEN > $(pwd)/web-identity-token
-            - ../script.sh
             - ../register-resource.sh
 
       - step:
@@ -79,6 +78,7 @@ pipelines:
             - export AWS_WEB_IDENTITY_TOKEN_FILE=$(pwd)/web-identity-token
             - export RESOURCE_NAME=Atlassian::Opsgenie::Team
             - echo $BITBUCKET_STEP_OIDC_TOKEN > $(pwd)/web-identity-token
+            - ../script.sh
             - ../test-check.sh
       - step:
           name: Publish Resource
@@ -109,7 +109,6 @@ pipelines:
             - export RESOURCE_NAME=Atlassian::Opsgenie::User
             - export RESOURCE_PACKAGE=atlassian-opsgenie-user
             - echo $BITBUCKET_STEP_OIDC_TOKEN > $(pwd)/web-identity-token
-            - ../script.sh
             - ../register-resource.sh
 
       - step:
@@ -122,6 +121,7 @@ pipelines:
             - export AWS_WEB_IDENTITY_TOKEN_FILE=$(pwd)/web-identity-token
             - export RESOURCE_NAME=Atlassian::Opsgenie::User
             - echo $BITBUCKET_STEP_OIDC_TOKEN > $(pwd)/web-identity-token
+            - ../user_script.sh
             - ../test-check.sh
 
       - step:
@@ -141,7 +141,7 @@ pipelines:
 
     Register-Publisher:
       - variables:
-        - name: REGION
+          - name: REGION
       - step:
           name: Build Resource and Register Resource
           oidc: true
@@ -151,8 +151,11 @@ pipelines:
             - export AWS_WEB_IDENTITY_TOKEN_FILE=$(pwd)/web-identity-token
             - echo $BITBUCKET_STEP_OIDC_TOKEN > $(pwd)/web-identity-token
             - aws cloudformation register-publisher --connection-arn $CONNECTION_ARN --accept-terms-and-conditions
+
+    #TODO add new pipeline to deregister-type along with region parameter
+
   pull-requests:
     master:
       - step:
           Build Check:
-            - mvn package
+            - mvn package -B

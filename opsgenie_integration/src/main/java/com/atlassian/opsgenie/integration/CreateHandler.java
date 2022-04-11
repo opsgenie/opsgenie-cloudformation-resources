@@ -1,105 +1,83 @@
 package com.atlassian.opsgenie.integration;
 
-import software.amazon.cloudformation.proxy.*;
 import com.atlassian.opsgenie.integration.client.OpsgenieClient;
 import com.atlassian.opsgenie.integration.client.OpsgenieClientException;
 import com.atlassian.opsgenie.integration.model.CreateIntegrationRequest;
 import com.atlassian.opsgenie.integration.model.CreateIntegrationResponse;
 import com.atlassian.opsgenie.integration.model.OwnerTeam;
+import software.amazon.cloudformation.proxy.*;
 
 import java.io.IOException;
-import java.util.Collections;
 
-public class CreateHandler extends BaseHandler<CallbackContext> {
+import static com.atlassian.opsgenie.integration.Helper.*;
+
+public class CreateHandler extends BaseHandler<CallbackContext, TypeConfigurationModel> {
 
     @Override
-    public ProgressEvent<ResourceModel, CallbackContext> handleRequest(
-            final AmazonWebServicesClientProxy proxy,
-            final ResourceHandlerRequest<ResourceModel> request,
-            final CallbackContext callbackContext,
-            final Logger logger) {
+    public ProgressEvent<ResourceModel, CallbackContext> handleRequest(AmazonWebServicesClientProxy proxy, ResourceHandlerRequest<ResourceModel> request, CallbackContext callbackContext,
+                                                                       Logger logger, TypeConfigurationModel typeConfiguration) {
 
         final ResourceModel model = request.getDesiredResourceState();
-        OpsgenieClient OGClient = new OpsgenieClient(model.getOpsgenieApiEndpoint(), model.getOpsgenieApiKey());
-        CreateIntegrationRequest req = new CreateIntegrationRequest();
-
-        if (model.getAllowConfigurationAccess() == null) {
-            model.setAllowConfigurationAccess(false);
-        }
-        req.setAllowConfigurationAccess(model.getAllowConfigurationAccess());
-
-        if (model.getAllowDeleteAccess() == null) {
-            model.setAllowDeleteAccess(true);
-        }
-        req.setAllowDeleteAccess(model.getAllowDeleteAccess());
-
-        if (model.getAllowReadAccess() == null) {
-            model.setAllowReadAccess(true);
-        }
-        req.setAllowReadAccess(model.getAllowReadAccess());
-
-        if (model.getAllowWriteAccess() == null) {
-            model.setAllowWriteAccess(true);
-        }
-        req.setAllowWriteAccess(model.getAllowWriteAccess());
-
-        if (model.getOwnerTeamId() != null) {
-            OwnerTeam ownerTeam = new OwnerTeam();
-            ownerTeam.setId(model.getOwnerTeamId());
-            req.setOwnerTeam(ownerTeam);
-        } else if (model.getOwnerTeamName() != null) {
-            OwnerTeam ownerTeam = new OwnerTeam();
-            ownerTeam.setName(model.getOwnerTeamName());
-            ownerTeam.setId(null);
-            req.setOwnerTeam(ownerTeam);
-        }
-        req.setName(model.getName());
-
-        if (model.getResponders() != null) {
-            if (model.getResponders().size() > 0) {
-                req.setRespondersPropertyList(model.getResponders());
-            }
-        }
-        if (model.getEnabled() == null) {
-            model.setEnabled(true);
-        }
-
-        req.setType(model.getIntegrationType());
-
-        req.setEnabled(model.getEnabled());
-
         try {
-            logger.log("[CREATE] Request data: " + req.toString());
-            if(model.getIntegrationId()!=null && !model.getIntegrationId().equals("")){
-                throw new OpsgenieClientException("Invalid request",400);
+            OpsgenieClient OGClient = CreateOGClient(typeConfiguration);
+
+            CreateIntegrationRequest createIntegrationRequest = new CreateIntegrationRequest();
+
+            if (model.getAllowConfigurationAccess() == null) {
+                model.setAllowConfigurationAccess(false);
             }
-            CreateIntegrationResponse resp = OGClient.CreateIntegration(req);
-            model.setIntegrationId(resp.getData().getId());
-            model.setIntegrationApiKey(resp.getData().getApiKey());
+            createIntegrationRequest.setAllowConfigurationAccess(model.getAllowConfigurationAccess());
+
+            if (model.getAllowDeleteAccess() == null) {
+                model.setAllowDeleteAccess(true);
+            }
+            createIntegrationRequest.setAllowDeleteAccess(model.getAllowDeleteAccess());
+
+            if (model.getAllowReadAccess() == null) {
+                model.setAllowReadAccess(true);
+            }
+            createIntegrationRequest.setAllowReadAccess(model.getAllowReadAccess());
+
+            if (model.getAllowWriteAccess() == null) {
+                model.setAllowWriteAccess(true);
+            }
+            createIntegrationRequest.setAllowWriteAccess(model.getAllowWriteAccess());
+
+            if (model.getOwnerTeamId() != null) {
+                OwnerTeam ownerTeam = new OwnerTeam();
+                ownerTeam.setId(model.getOwnerTeamId());
+                createIntegrationRequest.setOwnerTeam(ownerTeam);
+            } else if (model.getOwnerTeamName() != null) {
+                OwnerTeam ownerTeam = new OwnerTeam();
+                ownerTeam.setName(model.getOwnerTeamName());
+                ownerTeam.setId(null);
+                createIntegrationRequest.setOwnerTeam(ownerTeam);
+            }
+            createIntegrationRequest.setName(model.getName());
+
+            if (model.getResponders() != null) {
+                if (model.getResponders()
+                         .size() > 0) {
+                    createIntegrationRequest.setRespondersPropertyList(model.getResponders());
+                }
+            }
+            if (model.getEnabled() == null) {
+                model.setEnabled(true);
+            }
+
+            createIntegrationRequest.setType(model.getIntegrationType());
+
+            createIntegrationRequest.setEnabled(model.getEnabled());
+
+            CreateIntegrationResponse createIntegrationResponse = OGClient.CreateIntegration(createIntegrationRequest);
+            model.setIntegrationId(createIntegrationResponse.getData()
+                                                            .getId());
+            model.setIntegrationApiKey(createIntegrationResponse.getData()
+                                                                .getApiKey());
         } catch (OpsgenieClientException e) {
-            logger.log(e.getMessage());
-            HandlerErrorCode errorCode = HandlerErrorCode.GeneralServiceException;
-            if (e.getCode() == 422) {
-                errorCode = HandlerErrorCode.AlreadyExists;
-            }
-            if (e.getCode() == 429) {
-                errorCode = HandlerErrorCode.Throttling;
-            }
-            if (e.getCode() == 400) {
-                errorCode = HandlerErrorCode.InvalidRequest;
-            }
-            return ProgressEvent.<ResourceModel, CallbackContext>builder()
-                    .errorCode(errorCode)
-                    .message(e.getMessage())
-                    .status(OperationStatus.FAILED)
-                    .build();
+            return GetServiceFailureResponse(e.getCode(), e.getMessage());
         } catch (IOException e) {
-            logger.log(e.getMessage());
-            return ProgressEvent.<ResourceModel, CallbackContext>builder()
-                    .errorCode(HandlerErrorCode.InternalFailure)
-                    .message(e.getMessage())
-                    .status(OperationStatus.FAILED)
-                    .build();
+            return GetInternalFailureResponse(e.getMessage());
         }
 
         logger.log("[CREATE] " + model.getIntegrationId());

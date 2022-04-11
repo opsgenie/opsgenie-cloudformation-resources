@@ -13,9 +13,9 @@ public class OpsgenieClient {
 
     private OkHttpClient httpClient;
 
-    public OpsgenieClient(String apiKey, String endpoint) {
-        this.apiKey = apiKey;
+    public OpsgenieClient(String endpoint, String apiKey) {
         this.endpoint = endpoint;
+        this.apiKey = apiKey;
         this.httpClient = new OkHttpClient();
     }
 

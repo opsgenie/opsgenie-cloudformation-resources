@@ -1,36 +1,56 @@
 {
   "AWSTemplateFormatVersion": "2010-09-09",
   "Description": "Opsgenie Integration",
-  "Parameters": {
-    "OpsgenieApiKey": {
-      "Description": "Enter Opsgenie Api Key",
-      "Type": "String"
+  "Resources": {
+    "TestIntegrationTeam": {
+      "Type": "Atlassian::Opsgenie::Team",
+      "Properties": {
+        "Name": "integration-test-team",
+        "Description": "Test team to use with integration",
+        "Members": []
+      }
     },
-    "OpsgenieEndpoint": {
-      "Description": "Enter Opsgenie Api URL",
-      "Type": "String",
-      "Default": "https://api.opsgenie.com",
-      "AllowedValues": [
-        "https://api.opsgenie.com",
-        "https://api.eu.opsgenie.com",
-        "https://api.sandbox.opsgenie.com"
+    "TestIntegration": {
+      "Type": "Atlassian::Opsgenie::Integration",
+      "Properties": {
+        "IntegrationType": "API",
+        "Name": "test-cfn-integration",
+        "Enabled": true,
+        "OwnerTeamName" : "integration-test-team",
+        "AllowReadAccess": true,
+        "AllowWriteAccess": true,
+        "AllowDeleteAccess": true,
+        "AllowConfigurationAccess": false,
+        "Responders": [
+          {
+            "type": "team",
+            "name": "integration-test-team"
+          }
+        ]
+      },
+      "DependsOn": [
+        "TestIntegrationTeam"
       ]
     }
   },
-  "Resources": {
-    "IntegrationTest": {
-      "Type": "Atlassian::Opsgenie::Integration",
-      "Properties": {
-        "OpsgenieApiKey": {
-          "Ref": "OpsgenieApiKey"
-        },
-        "OpsgenieApiEndpoint": {
-          "Ref": "OpsgenieEndpoint"
-        },
-        "IntegrationType": "Auvik",
-        "Name": "test auvik integration",
-	"Enabled":true      
-	}
+  "Outputs": {
+    "TeamId": {
+      "Description": "Opsgenie TeamId",
+      "Value": {
+        "Fn::GetAtt": [
+          "TestIntegrationTeam",
+          "TeamId"
+        ]
+      }
+    },
+    "IntegrationId": {
+      "Description": "Opsgenie IntegrationId",
+      "Value": {
+        "Fn::GetAtt": [
+          "TestIntegration",
+          "IntegrationId"
+        ]
+      }
     }
   }
 }

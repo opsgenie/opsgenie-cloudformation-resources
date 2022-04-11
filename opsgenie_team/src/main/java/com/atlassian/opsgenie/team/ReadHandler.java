@@ -1,67 +1,61 @@
 package com.atlassian.opsgenie.team;
 
-import software.amazon.cloudformation.proxy.*;
 import com.atlassian.opsgenie.team.client.OpsgenieClient;
 import com.atlassian.opsgenie.team.client.OpsgenieClientException;
-import com.atlassian.opsgenie.team.model.*;
+import com.atlassian.opsgenie.team.model.ReadTeamResponse;
+import org.apache.commons.lang3.StringUtils;
+import software.amazon.cloudformation.proxy.*;
 
 import java.io.IOException;
-import java.util.List;
 import java.util.Arrays;
+import java.util.List;
 import java.util.stream.Collectors;
 
-public class ReadHandler extends BaseHandler<CallbackContext> {
+import static com.atlassian.opsgenie.team.Helper.*;
+
+public class ReadHandler extends BaseHandler<CallbackContext, TypeConfigurationModel> {
 
     @Override
-    public ProgressEvent<ResourceModel, CallbackContext> handleRequest(
-        final AmazonWebServicesClientProxy proxy,
-        final ResourceHandlerRequest<ResourceModel> request,
-        final CallbackContext callbackContext,
-        final Logger logger) {
+    public ProgressEvent<ResourceModel, CallbackContext> handleRequest(AmazonWebServicesClientProxy proxy, ResourceHandlerRequest<ResourceModel> request, CallbackContext callbackContext,
+                                                                       Logger logger, TypeConfigurationModel typeConfiguration) {
 
         final ResourceModel model = request.getDesiredResourceState();
-
-        // TODO : put your code here
-
-        OpsgenieClient ogClient = new OpsgenieClient(model.getOpsgenieApiKey(), model.getOpsgenieApiEndpoint());
-
         try {
-            ReadTeamResponse readTeamResponse = ogClient.ReadTeam(model.getTeamId());
+            OpsgenieClient OGClient = CreateOGClient(typeConfiguration);
 
-            model.setName(readTeamResponse.getTeamDataModel().getName());
-            model.setDescription(readTeamResponse.getTeamDataModel().getDescription());
+            if (StringUtils.isEmpty(model.getTeamId())) {
+                return GetServiceFailureResponse(404, "TeamId must be provided.");
+            }
 
-            if(readTeamResponse.getTeamDataModel().getMembers()!=null) {
+            ReadTeamResponse readTeamResponse = OGClient.ReadTeam(model.getTeamId());
 
-                List<Member> members = readTeamResponse.getTeamDataModel().getMembers().stream()
-                        .map(memberModel -> Member.builder()
-                                .userId(memberModel.getUser().getId())
-                                .role(memberModel.getRole())
-                                .build())
-                        .collect(Collectors.toList());
+            model.setName(readTeamResponse.getTeamDataModel()
+                                          .getName());
+            model.setDescription(readTeamResponse.getTeamDataModel()
+                                                 .getDescription());
+
+            if (readTeamResponse.getTeamDataModel()
+                                .getMembers() != null) {
+
+                List<Member> members = readTeamResponse.getTeamDataModel()
+                                                       .getMembers()
+                                                       .stream()
+                                                       .map(memberModel -> Member.builder()
+                                                                                 .userId(memberModel.getUser()
+                                                                                                    .getId())
+                                                                                 .role(memberModel.getRole())
+                                                                                 .build())
+                                                       .collect(Collectors.toList());
                 model.setMembers(members);
-            }else {
+            } else {
                 model.setMembers(Arrays.asList());
             }
 
 
         } catch (OpsgenieClientException e) {
-            if(e.getCode() == 404){
-                logger.log(e.getMessage());
-                e.printStackTrace();
-                return ProgressEvent.<ResourceModel, CallbackContext>builder()
-                        .errorCode(HandlerErrorCode.NotFound)
-                        .status(OperationStatus.FAILED)
-                        .build();
-            }
-        } catch (IOException e ){
-            logger.log("Exception");
-            logger.log(e.getMessage());
-            e.printStackTrace();
-            return ProgressEvent.<ResourceModel, CallbackContext>builder()
-                    .errorCode(HandlerErrorCode.InternalFailure)
-                    .status(OperationStatus.FAILED)
-                    .build();
+            return GetServiceFailureResponse(e.getCode(), e.getMessage());
+        } catch (IOException e) {
+            return GetInternalFailureResponse(e.getMessage());
         }
 
         logger.log("[READ] " + model.getTeamId());

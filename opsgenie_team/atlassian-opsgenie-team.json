@@ -2,6 +2,14 @@
   "typeName": "Atlassian::Opsgenie::Team",
   "description": "Opsgenie Team resource schema",
   "sourceUrl": "https://github.com/opsgenie/opsgenie-cloudformation-resources",
+  "typeConfiguration": {
+    "properties": {
+      "OpsgenieCredentials": {
+        "$ref": "#/definitions/OpsgenieCredentials"
+      }
+    },
+    "additionalProperties": false
+  },
   "definitions": {
     "Member": {
       "type": "object",
@@ -22,7 +30,23 @@
           "type": "string",
           "pattern": "^[a-zA-Z0-9-_.]+$"
         }
-      }
+      },
+      "additionalProperties": false
+    },
+    "OpsgenieCredentials": {
+      "description": "Credentials for the Opsgenie API",
+      "properties": {
+        "OpsgenieApiEndpoint": {
+          "type": "string",
+          "pattern": "^https:\/\/api(\\.eu|\\.sandbox|)\\.opsgenie\\.com$"
+        },
+        "OpsgenieApiKey": {
+          "type": "string",
+          "pattern": "[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}"
+        }
+      },
+      "type": "object",
+      "additionalProperties": false
     }
   },
   "properties": {
@@ -39,9 +63,7 @@
     "Description": {
       "description": "Team description",
       "type": "string",
-      "minLength": 1,
-      "pattern": "^[a-zA-Z0-9- _.]+$",
-      "maxLength": 100
+      "pattern": "^[a-zA-Z0-9- _.]+$"
     },
     "Members": {
       "description": "Array of members",
@@ -49,16 +71,6 @@
       "items": {
         "$ref": "#/definitions/Member"
       }
-    },
-    "OpsgenieApiKey": {
-      "description": "Api Key",
-      "type": "string",
-      "pattern": "[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}"
-    },
-    "OpsgenieApiEndpoint": {
-      "description": "Api endpoint",
-      "type": "string",
-      "pattern": "^https:\/\/api(\\.eu|\\.sandbox|)\\.opsgenie\\.com$"
     }
   },
   "required": [

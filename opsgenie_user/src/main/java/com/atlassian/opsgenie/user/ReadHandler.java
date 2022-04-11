@@ -1,59 +1,49 @@
 package com.atlassian.opsgenie.user;
 
-import software.amazon.cloudformation.proxy.*;
 import com.atlassian.opsgenie.user.client.OpsgenieClient;
 import com.atlassian.opsgenie.user.client.OpsgenieClientException;
-import com.atlassian.opsgenie.user.model.*;
+import com.atlassian.opsgenie.user.model.GetUserResponse;
+import org.apache.commons.lang3.StringUtils;
+import software.amazon.cloudformation.proxy.*;
 
 import java.io.IOException;
-import java.util.List;
 
-public class ReadHandler extends BaseHandler<CallbackContext> {
+import static com.atlassian.opsgenie.user.Helper.*;
+
+public class ReadHandler extends BaseHandler<CallbackContext, TypeConfigurationModel> {
 
     @Override
-    public ProgressEvent<ResourceModel, CallbackContext> handleRequest(
-            final AmazonWebServicesClientProxy proxy,
-            final ResourceHandlerRequest<ResourceModel> request,
-            final CallbackContext callbackContext,
-            final Logger logger) {
+    public ProgressEvent<ResourceModel, CallbackContext> handleRequest(AmazonWebServicesClientProxy proxy, ResourceHandlerRequest<ResourceModel> request, CallbackContext callbackContext,
+                                                                       Logger logger, TypeConfigurationModel typeConfiguration) {
 
         final ResourceModel model = request.getDesiredResourceState();
-        OpsgenieClient OGClient = new OpsgenieClient(model.getOpsgenieApiEndpoint(), model.getOpsgenieApiKey());
         try {
+            OpsgenieClient OGClient = CreateOGClient(typeConfiguration);
             String id;
-            if (model.getUserId() != null && !model.getUserId().equals("")) {
-                logger.log(" userId: " + model.getUserId());
+            if (StringUtils.isNotEmpty(model.getUserId())) {
                 id = model.getUserId();
-            } else {
-                logger.log(" userName: " + model.getUsername());
+            } else if (StringUtils.isNotEmpty(model.getUsername())) {
                 id = model.getUsername();
+            } else {
+                return GetServiceFailureResponse(404, "UserId or UserName must be provided.");
             }
-            GetUserResponse resp = OGClient.GetUser(id);
-            model.setFullName(resp.getDataModel().getFullName());
-            model.setUsername(resp.getDataModel().getUsername());
-            model.setRole(resp.getDataModel().getRole().getName());
+            GetUserResponse getUserResponse = OGClient.GetUser(id);
+            model.setFullName(getUserResponse.getDataModel()
+                                             .getFullName());
+            model.setUsername(getUserResponse.getDataModel()
+                                             .getUsername());
+            model.setRole(getUserResponse.getDataModel()
+                                         .getRole()
+                                         .getName());
+            model.setUserId(getUserResponse.getDataModel()
+                                           .getId());
         } catch (OpsgenieClientException e) {
-            HandlerErrorCode errorCode = HandlerErrorCode.GeneralServiceException;
-            if (e.getCode() == 404) {
-                errorCode = HandlerErrorCode.NotFound;
-            }
-            if (e.getCode() == 429) {
-                errorCode = HandlerErrorCode.Throttling;
-            }
-            logger.log(e.getMessage());
-            return ProgressEvent.<ResourceModel, CallbackContext>builder()
-                    .errorCode(errorCode)
-                    .status(OperationStatus.FAILED)
-                    .build();
+            return GetServiceFailureResponse(e.getCode(), e.getMessage());
         } catch (IOException e) {
-            e.printStackTrace();
-            return ProgressEvent.<ResourceModel, CallbackContext>builder()
-                    .status(OperationStatus.FAILED)
-                    .build();
+            return GetInternalFailureResponse(e.getMessage());
         }
 
         logger.log("[READ] " + model.getUserId());
-
         return ProgressEvent.<ResourceModel, CallbackContext>builder()
                 .resourceModel(model)
                 .status(OperationStatus.SUCCESS)

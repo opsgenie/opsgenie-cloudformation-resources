@@ -1,16 +1,12 @@
 {
     "CREATE": {
-        "/OpsgenieApiEndpoint": "",
         "/FullName": "test user123",
         "/Username": "test@test.com",
-        "/OpsgenieApiKey": "",
         "/Role": "User"
     },
     "UPDATE": {
-        "/OpsgenieApiEndpoint": "",
         "/FullName": "test user123",
         "/Username": "test@test.com",
-        "/OpsgenieApiKey": "",
         "/Role": "User"
     }
 

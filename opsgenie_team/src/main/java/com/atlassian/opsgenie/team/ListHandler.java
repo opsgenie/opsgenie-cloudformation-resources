@@ -1,51 +1,42 @@
 package com.atlassian.opsgenie.team;
 
-import software.amazon.cloudformation.proxy.*;
 import com.atlassian.opsgenie.team.client.OpsgenieClient;
 import com.atlassian.opsgenie.team.client.OpsgenieClientException;
-import com.atlassian.opsgenie.team.model.*;
+import com.atlassian.opsgenie.team.model.ListTeamResponse;
+import com.atlassian.opsgenie.team.model.TeamDataModel;
+import software.amazon.cloudformation.proxy.*;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
-public class ListHandler extends BaseHandler<CallbackContext> {
+import static com.atlassian.opsgenie.team.Helper.*;
+
+public class ListHandler extends BaseHandler<CallbackContext, TypeConfigurationModel> {
 
     @Override
-    public ProgressEvent<ResourceModel, CallbackContext> handleRequest(
-        final AmazonWebServicesClientProxy proxy,
-        final ResourceHandlerRequest<ResourceModel> request,
-        final CallbackContext callbackContext,
-        final Logger logger) {
+    public ProgressEvent<ResourceModel, CallbackContext> handleRequest(AmazonWebServicesClientProxy proxy, ResourceHandlerRequest<ResourceModel> request, CallbackContext callbackContext,
+                                                                       Logger logger, TypeConfigurationModel typeConfiguration) {
 
         final List<ResourceModel> models = new ArrayList<>();
-
-        OpsgenieClient ogClient = new OpsgenieClient(request.getDesiredResourceState().getOpsgenieApiKey(), request.getDesiredResourceState().getOpsgenieApiEndpoint());
-
+        final ResourceModel model = request.getDesiredResourceState();
         try {
-            ListTeamResponse listTeamResponse = ogClient.ListTeam();
-            for(TeamDataModel teamDataModel: listTeamResponse.getTeamDataModel()){
-                ResourceModel.ResourceModelBuilder resourceModelBuilder = ResourceModel.builder();
-                resourceModelBuilder.teamId(teamDataModel.getId());
-                resourceModelBuilder.name(teamDataModel.getName());
-                resourceModelBuilder.description(teamDataModel.getDescription());
+            OpsgenieClient OGClient = CreateOGClient(typeConfiguration);
 
-
-                resourceModelBuilder.opsgenieApiKey(request.getDesiredResourceState().getOpsgenieApiKey());
-                resourceModelBuilder.opsgenieApiEndpoint(request.getDesiredResourceState().getOpsgenieApiEndpoint());
-
-                models.add(resourceModelBuilder.build());
+            ListTeamResponse listTeamResponse = OGClient.ListTeam();
+            for (TeamDataModel teamDataModel : listTeamResponse.getTeamDataModel()) {
+                models.add(ResourceModel.builder()
+                                        .teamId(teamDataModel.getId())
+                                        .name(teamDataModel.getName())
+                                        .description(teamDataModel.getDescription())
+                                        .build());
             }
-        } catch (IOException | OpsgenieClientException e) {
-            logger.log("Exception");
-            logger.log(e.getMessage());
-            e.printStackTrace();
-            return ProgressEvent.<ResourceModel, CallbackContext>builder()
-                    .errorCode(HandlerErrorCode.InternalFailure)
-                    .status(OperationStatus.FAILED)
-                    .build();
+        } catch (OpsgenieClientException e) {
+            return GetServiceFailureResponse(e.getCode(), e.getMessage());
+        } catch (IOException e) {
+            return GetInternalFailureResponse(e.getMessage());
         }
+
         return ProgressEvent.<ResourceModel, CallbackContext>builder()
             .resourceModels(models)
             .status(OperationStatus.SUCCESS)

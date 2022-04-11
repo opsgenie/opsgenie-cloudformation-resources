@@ -2,6 +2,14 @@
   "typeName": "Atlassian::Opsgenie::Integration",
   "description": "Opsgenie Integration Resource definition",
   "sourceUrl": "https://github.com/opsgenie/opsgenie-cloudformation-resources",
+  "typeConfiguration": {
+    "properties": {
+      "OpsgenieCredentials": {
+        "$ref": "#/definitions/OpsgenieCredentials"
+      }
+    },
+    "additionalProperties": false
+  },
   "definitions": {
     "respondersProperty": {
       "type": "object",
@@ -21,20 +29,26 @@
           "description": "Responder username, if responder type is user",
           "minLength": 1
         }
-      }
+      },
+      "additionalProperties": false
+    },
+    "OpsgenieCredentials": {
+      "description": "Credentials for the Opsgenie API",
+      "properties": {
+        "OpsgenieApiEndpoint": {
+          "type": "string",
+          "pattern": "^https:\/\/api(\\.eu|\\.sandbox|)\\.opsgenie\\.com$"
+        },
+        "OpsgenieApiKey": {
+          "type": "string",
+          "pattern": "[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}"
+        }
+      },
+      "type": "object",
+      "additionalProperties": false
     }
   },
   "properties": {
-    "OpsgenieApiEndpoint": {
-      "type": "string",
-      "pattern": "^https:\/\/api(\\.eu|\\.sandbox|)\\.opsgenie\\.com$",
-      "minLength": 1
-    },
-    "OpsgenieApiKey": {
-      "type": "string",
-      "pattern": "^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$",
-      "minLength": 1
-    },
     "IntegrationApiKey": {
       "type": "string",
       "minLength": 1
@@ -51,8 +65,7 @@
     "Name": {
       "type": "string",
       "pattern": "^[a-zA-Z0-9- _.]+$",
-      "description": "Integration name",
-      "minLength": 1
+      "description": "Integration name"
     },
     "IntegrationType": {
       "type": "string",
@@ -67,8 +80,7 @@
     "OwnerTeamName": {
       "type": "string",
       "pattern": "^[a-zA-Z0-9-_.]+$",
-      "description": "Name of the integration owner team.",
-      "minLength": 1
+      "description": "Name of the integration owner team."
     },
     "AllowReadAccess": {
       "type": "boolean",
@@ -98,8 +110,6 @@
     }
   },
   "required": [
-    "OpsgenieApiEndpoint",
-    "OpsgenieApiKey",
     "Enabled",
     "IntegrationType",
     "Name"
