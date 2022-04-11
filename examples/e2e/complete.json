@@ -1,33 +1,11 @@
 {
   "AWSTemplateFormatVersion": "2010-09-09",
-  "Description": "Opsgenie Test Users",
-  "Parameters": {
-    "OpsgenieApiKey": {
-      "Description": "Enter Opsgenie Api Key",
-      "Type": "String"
-    },
-    "OpsgenieApiEndpoint": {
-      "Description": "Enter Opsgenie Api endpoint",
-      "Type": "String",
-      "Default": "https://api.opsgenie.com",
-      "AllowedValues": [
-        "https://api.opsgenie.com",
-        "https://api.eu.opsgenie.com",
-        "https://api.sandbox.opsgenie.com"
-      ]
-    }
-  },
+  "Description": "Opsgenie Cloudformation Resources End to End Test",
   "Resources": {
     "UserA": {
       "Type": "Atlassian::Opsgenie::User",
       "Properties": {
-        "OpsgenieApiKey": {
-          "Ref": "OpsgenieApiKey"
-        },
-        "OpsgenieApiEndpoint": {
-          "Ref": "OpsgenieApiEndpoint"
-        },
-        "Username": "user.a@example.com",
+        "Username": "usera@cfntest.com",
         "FullName": "User A",
         "Role": "User"
       }
@@ -35,13 +13,7 @@
     "UserB": {
       "Type": "Atlassian::Opsgenie::User",
       "Properties": {
-        "OpsgenieApiKey": {
-          "Ref": "OpsgenieApiKey"
-        },
-        "OpsgenieApiEndpoint": {
-          "Ref": "OpsgenieApiEndpoint"
-        },
-        "Username": "user.b@example.com",
+        "Username": "userb@cfntest.com",
         "FullName": "User B",
         "Role": "User"
       }
@@ -49,12 +21,6 @@
     "TeamA": {
       "Type": "Atlassian::Opsgenie::Team",
       "Properties": {
-        "OpsgenieApiKey": {
-          "Ref": "OpsgenieApiKey"
-        },
-        "OpsgenieApiEndpoint": {
-          "Ref": "OpsgenieApiEndpoint"
-        },
         "Name": "cloudformation-ops-team-test",
         "Description": "Test team with 2 user for demonstration",
         "Members": [
@@ -80,57 +46,62 @@
     "IntegrationTest": {
       "Type": "Atlassian::Opsgenie::Integration",
       "Properties": {
-        "OpsgenieApiKey": {
-          "Ref": "OpsgenieApiKey"
-        },
-        "OpsgenieApiEndpoint": {
-          "Ref": "OpsgenieApiEndpoint"
-        },
-        "IntegrationType": "AmazonSns",
-        "Name": "test awsSns test",
+        "IntegrationType": "API",
+        "Name": "test integration",
         "Responders": [
           {
             "type": "team",
             "name": "cloudformation-ops-team-test"
           }
         ],
-        "Enabled": true
+        "Enabled": true,
+        "OwnerTeamName" : "cloudformation-ops-team-test",
+        "AllowReadAccess": true,
+        "AllowWriteAccess": true,
+        "AllowDeleteAccess": true,
+        "AllowConfigurationAccess": false
       },
       "DependsOn": [
         "TeamA"
       ]
+    }
+  },
+  "Outputs": {
+    "UserA": {
+      "Description": "Opsgenie UserId",
+      "Value": {
+        "Fn::GetAtt": [
+          "UserA",
+          "UserId"
+        ]
+      }
     },
-    "MySns": {
-      "Type": "AWS::SNS::Topic",
-      "Properties": {
-        "DisplayName": "opsgenie-test-aws",
-        "Subscription": [
-          {
-            "Endpoint": {
-              "Fn::Join": [
-                "",
-                [
-                  {
-                    "Ref": "OpsgenieApiEndpoint"
-                  },
-                  "/v1/json/amazonsns?apiKey=",
-                  {
-                    "Fn::GetAtt": [
-                      "IntegrationTest",
-                      "IntegrationApiKey"
-                    ]
-                  }
-                ]
-              ]
-            },
-            "Protocol": "https"
-          }
-        ],
-        "TopicName": "opsgenie-test-demo-134"
-      },
-      "DependsOn": [
-        "IntegrationTest"
-      ]
+    "UserB": {
+      "Description": "Opsgenie UserId",
+      "Value": {
+        "Fn::GetAtt": [
+          "UserB",
+          "UserId"
+        ]
+      }
+    },
+    "TeamId": {
+      "Description": "Opsgenie TeamId",
+      "Value": {
+        "Fn::GetAtt": [
+          "TeamA",
+          "TeamId"
+        ]
+      }
+    },
+    "IntegrationId": {
+      "Description": "Opsgenie IntegrationId",
+      "Value": {
+        "Fn::GetAtt": [
+          "IntegrationTest",
+          "IntegrationId"
+        ]
+      }
     }
   }
 }

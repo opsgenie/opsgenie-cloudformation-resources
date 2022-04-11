@@ -1,7 +1,12 @@
 {
   "CREATE": {
-    "/OpsgenieApiEndpoint": "",
-    "/OpsgenieApiKey": "",
-    "/Members": []
+    "/Members": [],
+    "/Name": "Test-CFN-Team",
+    "/Description": "Test cfn team description"
+  },
+  "UPDATE": {
+    "/Members": [],
+    "/Name": "Test-CFN-Team",
+    "/Description": "Test cfn team description"
   }
 }

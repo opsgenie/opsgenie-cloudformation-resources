@@ -1,46 +1,38 @@
 package com.atlassian.opsgenie.integration;
 
-import software.amazon.cloudformation.proxy.*;
 import com.atlassian.opsgenie.integration.client.OpsgenieClient;
 import com.atlassian.opsgenie.integration.client.OpsgenieClientException;
+import org.apache.commons.lang3.StringUtils;
+import software.amazon.cloudformation.proxy.*;
 
 import java.io.IOException;
 
-public class DeleteHandler extends BaseHandler<CallbackContext> {
+import static com.atlassian.opsgenie.integration.Helper.*;
+
+public class DeleteHandler extends BaseHandler<CallbackContext, TypeConfigurationModel> {
 
     @Override
-    public ProgressEvent<ResourceModel, CallbackContext> handleRequest(
-        final AmazonWebServicesClientProxy proxy,
-        final ResourceHandlerRequest<ResourceModel> request,
-        final CallbackContext callbackContext,
-        final Logger logger) {
+    public ProgressEvent<ResourceModel, CallbackContext> handleRequest(AmazonWebServicesClientProxy proxy, ResourceHandlerRequest<ResourceModel> request, CallbackContext callbackContext,
+                                                                       Logger logger, TypeConfigurationModel typeConfiguration) {
 
         final ResourceModel model = request.getDesiredResourceState();
-        OpsgenieClient OGClient = new OpsgenieClient(model.getOpsgenieApiEndpoint(),model.getOpsgenieApiKey());
-
         try {
-            OGClient.DeleteIntegration(model.getIntegrationId());
-        } catch (IOException e) {
-            logger.log(e.getMessage());
-            return ProgressEvent.<ResourceModel, CallbackContext>builder()
-                    .resourceModel(model)
-                    .status(OperationStatus.FAILED)
-                    .build();
-        } catch (OpsgenieClientException e) {
-            logger.log(e.getMessage());
-            HandlerErrorCode errorCode = HandlerErrorCode.GeneralServiceException;
-            if (e.getCode() == 404) {
-                errorCode = HandlerErrorCode.NotFound;
+            OpsgenieClient OGClient = CreateOGClient(typeConfiguration);
+            if (StringUtils.isEmpty(model.getIntegrationId())) {
+                return GetServiceFailureResponse(404, "IntegrationId must be provided.");
             }
-            return ProgressEvent.<ResourceModel, CallbackContext>builder()
-                    .errorCode(errorCode)
-                    .status(OperationStatus.FAILED)
-                    .build();
+
+            OGClient.DeleteIntegration(model.getIntegrationId());
+
+        } catch (OpsgenieClientException e) {
+            return GetServiceFailureResponse(e.getCode(), e.getMessage());
+        } catch (IOException e) {
+            return GetInternalFailureResponse(e.getMessage());
         }
 
         logger.log("[DELETE] " + model.getIntegrationId());
         return ProgressEvent.<ResourceModel, CallbackContext>builder()
-            .status(OperationStatus.SUCCESS)
-            .build();
+                            .status(OperationStatus.SUCCESS)
+                            .build();
     }
 }

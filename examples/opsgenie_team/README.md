@@ -10,8 +10,6 @@ The Team resource supports all the fields available in Opsgenie's Team entity.
 
 | Property            	| Description                                                        	| Required 	| Limit                                 	|
 |---------------------	|--------------------------------------------------------------------	|----------	|---------------------------------------	|
-| OpsgenieApiKey      	| Your Opsgenie provided API Key                                     	| Required 	|                                       	|
-| OpsgenieApiEndpoint 	| Endpoint of API according to your preferred environment            	| Required 	| api.eu.opsgenie.com, api.opsgenie.com 	|
 | Name                	| Name of the team                                                   	| Required 	| 100 chars                             	|
 | Description         	| The description of team                                            	| Optional 	| 10000 chars                           	|
 | Members             	| The users which will be added to team, and optionally their roles. 	| Optional 	|                                       	|

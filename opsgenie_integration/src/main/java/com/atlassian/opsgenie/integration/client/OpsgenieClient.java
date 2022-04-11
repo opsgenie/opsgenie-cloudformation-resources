@@ -1,15 +1,10 @@
 package com.atlassian.opsgenie.integration.client;
 
-import com.atlassian.opsgenie.integration.model.CreateIntegrationRequest;
-import com.atlassian.opsgenie.integration.model.CreateIntegrationResponse;
-import com.atlassian.opsgenie.integration.model.GetIntegrationResponse;
-import com.atlassian.opsgenie.integration.model.ListIntegrationResponse;
-import com.atlassian.opsgenie.integration.model.UpdateIntegrationRequest;
+import com.atlassian.opsgenie.integration.model.*;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import okhttp3.*;
-import okhttp3.Request;
 
 import java.io.IOException;
 
@@ -27,11 +22,14 @@ public class OpsgenieClient {
     }
 
     private String execute(Request request) throws IOException, OpsgenieClientException {
-        Response response = this.httpClient.newCall(request).execute();
+        Response response = this.httpClient.newCall(request)
+                                           .execute();
         if (!(response.code() >= 200 && response.code() <= 299)) {
-            throw new OpsgenieClientException(response.body().string(), response.code());
+            throw new OpsgenieClientException(response.body()
+                                                      .string(), response.code());
         }
-        return response.body().string();
+        return response.body()
+                       .string();
 
     }
 
@@ -52,7 +50,7 @@ public class OpsgenieClient {
 
     public void DeleteIntegration(String Id) throws IOException, OpsgenieClientException {
         Request request = new Request.Builder()
-                .url(this.endpoint + "/v2/integrations/" + Id + "?apiKey=" + this.apiKey)
+                .url(this.endpoint + "/v2/integrations/" + Id)
                 .addHeader("Authorization", "GenieKey " + this.apiKey)
                 .addHeader("User-Agent", userAgent)
                 .delete()
@@ -71,14 +69,13 @@ public class OpsgenieClient {
                 .addHeader("User-Agent", userAgent)
                 .build();
         execute(request);
-
     }
 
     public GetIntegrationResponse GetIntegration(String Id) throws IOException, OpsgenieClientException {
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         Request request = new Request.Builder()
-                .url(this.endpoint + "/v2/integrations/" + Id + "?apiKey=" + this.apiKey)
+                .url(this.endpoint + "/v2/integrations/" + Id)
                 .get()
                 .addHeader("Authorization", "GenieKey " + this.apiKey)
                 .addHeader("User-Agent", userAgent)
@@ -91,7 +88,7 @@ public class OpsgenieClient {
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         Request request = new Request.Builder()
-                .url(this.endpoint + "/v2/integrations?apiKey=" + this.apiKey)
+                .url(this.endpoint + "/v2/integrations")
                 .get()
                 .addHeader("Authorization", "GenieKey " + this.apiKey)
                 .addHeader("User-Agent", userAgent)

@@ -1,39 +1,23 @@
 {
   "AWSTemplateFormatVersion": "2010-09-09",
-  "Description": "Opsgenie Test Users",
-  "Parameters": {
-    "ApiKey": {
-      "Description": "Enter Opsgenie Api Key",
-      "Type": "String"
-    },
-    "ApiEndpoint": {
-      "Description": "Enter Opsgenie Api endpoint",
-      "Type": "String",
-      "Default": "https://api.opsgenie.com",
-      "AllowedValues": [
-        "https://api.opsgenie.com",
-        "https://api.eu.opsgenie.com",
-        "https://api.sandbox.opsgenie.com"
-      ]
-    }
-  },
+  "Description": "Opsgenie Team",
   "Resources": {
     "TeamA": {
       "Type": "Atlassian::Opsgenie::Team",
       "Properties": {
-        "OpsgenieApiKey": {
-          "Ref": "ApiKey"
-        },
-        "OpsgenieApiEndpoint": {
-          "Ref": "ApiEndpoint"
-        },
         "Name": "uuuii-test-team-ops",
-        "Description": "Test team with 2 user for demonstration",
-        "Members": [
-          {
-            "UserId": "04461d66-6ec6-4632-9904-f5429aec9535",
-            "Role": "user"
-          }
+        "Description": "Test team with 0 user for demonstration",
+        "Members": []
+      }
+    }
+  },
+  "Outputs": {
+    "TeamId": {
+      "Description": "Opsgenie TeamId",
+      "Value": {
+        "Fn::GetAtt": [
+          "TeamA",
+          "TeamId"
         ]
       }
     }

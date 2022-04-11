@@ -1,47 +1,33 @@
 package com.atlassian.opsgenie.team;
 
-import software.amazon.cloudformation.proxy.*;
 import com.atlassian.opsgenie.team.client.OpsgenieClient;
 import com.atlassian.opsgenie.team.client.OpsgenieClientException;
-import com.atlassian.opsgenie.team.model.DeleteTeamResponse;
+import org.apache.commons.lang3.StringUtils;
+import software.amazon.cloudformation.proxy.*;
 
 import java.io.IOException;
 
-public class DeleteHandler extends BaseHandler<CallbackContext> {
+import static com.atlassian.opsgenie.team.Helper.*;
+
+public class DeleteHandler extends BaseHandler<CallbackContext, TypeConfigurationModel> {
 
     @Override
-    public ProgressEvent<ResourceModel, CallbackContext> handleRequest(
-            final AmazonWebServicesClientProxy proxy,
-            final ResourceHandlerRequest<ResourceModel> request,
-            final CallbackContext callbackContext,
-            final Logger logger) {
+    public ProgressEvent<ResourceModel, CallbackContext> handleRequest(AmazonWebServicesClientProxy proxy, ResourceHandlerRequest<ResourceModel> request, CallbackContext callbackContext,
+                                                                       Logger logger, TypeConfigurationModel typeConfiguration) {
 
         final ResourceModel model = request.getDesiredResourceState();
-
-        // TODO : put your code here
-
-        OpsgenieClient ogClient = new OpsgenieClient(model.getOpsgenieApiKey(), model.getOpsgenieApiEndpoint());
-
         try {
-            DeleteTeamResponse deleteTeamResponse = ogClient.DeleteTeam(model.getTeamId());
+            OpsgenieClient OGClient = CreateOGClient(typeConfiguration);
 
-        } catch (OpsgenieClientException e) {
-            if(e.getCode() == 404){
-                logger.log(e.getMessage());
-                e.printStackTrace();
-                return ProgressEvent.<ResourceModel, CallbackContext>builder()
-                        .errorCode(HandlerErrorCode.NotFound)
-                        .status(OperationStatus.FAILED)
-                        .build();
+            if (StringUtils.isEmpty(model.getTeamId())) {
+                return GetServiceFailureResponse(404, "TeamId must be provided.");
             }
-        } catch (IOException e ){
-            logger.log("Exception");
-            logger.log(e.getMessage());
-            e.printStackTrace();
-            return ProgressEvent.<ResourceModel, CallbackContext>builder()
-                    .errorCode(HandlerErrorCode.InternalFailure)
-                    .status(OperationStatus.FAILED)
-                    .build();
+
+            OGClient.DeleteTeam(model.getTeamId());
+        } catch (OpsgenieClientException e) {
+            return GetServiceFailureResponse(e.getCode(), e.getMessage());
+        } catch (IOException e) {
+            return GetInternalFailureResponse(e.getMessage());
         }
 
         logger.log("[DELETE] " + model.getTeamId());

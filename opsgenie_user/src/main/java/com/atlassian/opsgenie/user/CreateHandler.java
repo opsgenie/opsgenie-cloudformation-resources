@@ -1,74 +1,46 @@
 package com.atlassian.opsgenie.user;
 
-import software.amazon.cloudformation.proxy.*;
 import com.atlassian.opsgenie.user.client.OpsgenieClient;
 import com.atlassian.opsgenie.user.client.OpsgenieClientException;
 import com.atlassian.opsgenie.user.model.AddUserRequest;
 import com.atlassian.opsgenie.user.model.AddUserResponse;
 import com.atlassian.opsgenie.user.model.UserRole;
+import software.amazon.cloudformation.proxy.*;
 
 import java.io.IOException;
 
-public class CreateHandler extends BaseHandler<CallbackContext> {
+import static com.atlassian.opsgenie.user.Helper.*;
 
+public class CreateHandler extends BaseHandler<CallbackContext, TypeConfigurationModel> {
 
     @Override
-    public ProgressEvent<ResourceModel, CallbackContext> handleRequest(
-            final AmazonWebServicesClientProxy proxy,
-            final ResourceHandlerRequest<ResourceModel> request,
-            final CallbackContext callbackContext,
-            final Logger logger) {
+    public ProgressEvent<ResourceModel, CallbackContext> handleRequest(AmazonWebServicesClientProxy proxy, ResourceHandlerRequest<ResourceModel> request, CallbackContext callbackContext,
+                                                                       Logger logger, TypeConfigurationModel typeConfiguration) {
 
         final ResourceModel model = request.getDesiredResourceState();
-        OpsgenieClient OGClient = new OpsgenieClient(model.getOpsgenieApiEndpoint(), model.getOpsgenieApiKey());
-
-        UserRole tmp = new UserRole();
-        tmp.setName(model.getRole());
-
-        AddUserRequest usr = new AddUserRequest();
-        usr.setFullname(model.getFullName());
-        usr.setRole(tmp);
-        usr.setUsername(model.getUsername());
-        //todo add other fields in future
         try {
-            if(model.getUserId()!=null && !model.equals("")){
-                throw new OpsgenieClientException("Invalid request",400);
-            }
-            logger.log("Sending request for creating user: " + usr.toString());
-            AddUserResponse resp = OGClient.AddUser(usr);
-            model.setUserId(resp.getDataModel().getId());
-            logger.log("ResourceModel: " + model.toString());
+            OpsgenieClient OGClient = CreateOGClient(typeConfiguration);
+            UserRole userRole = new UserRole();
+            userRole.setName(model.getRole());
+
+            AddUserRequest addUserRequest = new AddUserRequest();
+            addUserRequest.setFullname(model.getFullName());
+            addUserRequest.setRole(userRole);
+            addUserRequest.setUsername(model.getUsername());
+
+            AddUserResponse addUserResponse = OGClient.AddUser(addUserRequest);
+            model.setUserId(addUserResponse.getDataModel()
+                                           .getId());
         } catch (OpsgenieClientException e) {
-            logger.log(e.getMessage());
-            HandlerErrorCode errorCode = HandlerErrorCode.GeneralServiceException;
-            if (e.getCode() == 409) {
-                errorCode = HandlerErrorCode.AlreadyExists;
-            }
-            if (e.getCode() == 429) {
-                errorCode = HandlerErrorCode.Throttling;
-            }
-            if (e.getCode() == 400) {
-                errorCode = HandlerErrorCode.InvalidRequest;
-            }
-            return ProgressEvent.<ResourceModel, CallbackContext>builder()
-                    .errorCode(errorCode)
-                    .resourceModel(model)
-                    .message(e.getMessage())
-                    .status(OperationStatus.FAILED)
-                    .build();
+            return GetServiceFailureResponse(e.getCode(), e.getMessage());
         } catch (IOException e) {
-            return ProgressEvent.<ResourceModel, CallbackContext>builder()
-                    .errorCode(HandlerErrorCode.InternalFailure)
-                    .resourceModel(model)
-                    .message(e.getMessage())
-                    .status(OperationStatus.FAILED)
-                    .build();
+            return GetInternalFailureResponse(e.getMessage());
         }
 
         logger.log("[CREATE] " + model.getUserId());
         return ProgressEvent.<ResourceModel, CallbackContext>builder()
-                .resourceModel(model)
-                .status(OperationStatus.SUCCESS)
-                .build();
+                            .resourceModel(model)
+                            .status(OperationStatus.SUCCESS)
+                            .build();
     }
 }

@@ -19,6 +19,13 @@ function readJson {
   fi;
 }
 
+aws cloudformation set-type-configuration \
+    --region $REGION \
+    --type RESOURCE \
+    --type-name $RESOURCE_NAME \
+    --configuration-alias default \
+    --configuration file://typeConfiguration.json
+
 aws cloudformation test-type --type RESOURCE --type-name $RESOURCE_NAME --log-delivery-bucket $BUCKET_NAME> test_arn.json
 
 TEST_ARN=`readJson test_arn.json TypeVersionArn` || exit 1;
@@ -44,4 +51,3 @@ else
   echo $TEST_STATUS > test_result.txt
   exit 1
 fi
-

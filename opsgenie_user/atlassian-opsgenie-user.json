@@ -2,31 +2,59 @@
   "typeName": "Atlassian::Opsgenie::User",
   "description": "Opsgenie User",
   "sourceUrl": "https://github.com/opsgenie/opsgenie-cloudformation-resources",
+  "typeConfiguration": {
+    "properties": {
+      "OpsgenieCredentials": {
+        "$ref": "#/definitions/OpsgenieCredentials"
+      },
+      "ContractTestSettings": {
+        "$ref": "#/definitions/ContractTestSettings"
+      }
+    },
+    "additionalProperties": false
+  },
   "definitions": {
+    "OpsgenieCredentials": {
+      "description": "Credentials for the Opsgenie API",
+      "properties": {
+        "OpsgenieApiEndpoint": {
+          "type": "string",
+          "pattern": "^https:\/\/api(\\.eu|\\.sandbox|)\\.opsgenie\\.com$"
+        },
+        "OpsgenieApiKey": {
+          "type": "string",
+          "pattern": "[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}"
+        }
+      },
+      "type": "object",
+      "additionalProperties": false
+    },
+    "ContractTestSettings": {
+      "description": "Contract test settings",
+      "properties": {
+        "DelayEnabled": {
+          "type": "boolean"
+        },
+        "DelaySeconds": {
+          "type": "integer"
+        }
+      },
+      "type": "object",
+      "additionalProperties": false
+    }
   },
   "properties": {
     "UserId": {
       "type": "string"
     },
-    "OpsgenieApiEndpoint": {
-      "type": "string",
-      "pattern": "^https:\/\/api(\\.eu|\\.sandbox|)\\.opsgenie\\.com$",
-      "minLength": 1
-    },
-    "OpsgenieApiKey": {
-      "type": "string",
-      "pattern": "[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}"
-    },
     "Username": {
       "type": "string",
       "pattern": "^[a-z0-9._+-]+@[a-z0-9]+\\.[a-z]{2,6}$",
-      "description": "Opsgenie Username the mail address of the user",
-      "minLength": 1
+      "description": "Opsgenie Username the mail address of the user"
     },
     "FullName": {
       "type": "string",
       "pattern": "^[a-zA-Z0-9- _.]+$",
-      "minLength": 1,
       "description": "User full name"
     },
     "Role": {
@@ -36,11 +64,9 @@
     }
   },
   "required": [
-    "OpsgenieApiEndpoint",
     "Username",
     "FullName",
-    "Role",
-    "OpsgenieApiKey"
+    "Role"
   ],
   "readOnlyProperties": [
     "/properties/UserId"
@@ -48,6 +74,11 @@
   "createOnlyProperties": [
     "/properties/Username",
     "/properties/FullName"
+  ],
+  "additionalIdentifiers": [
+    [
+      "/properties/Username"
+    ]
   ],
   "primaryIdentifier": [
     "/properties/UserId"

@@ -13,11 +13,13 @@ Resources:
     Properties:
       Handler: com.atlassian.opsgenie.integration.HandlerWrapper::handleRequest
       Runtime: java8
-      CodeUri: opsgenie_integration/target/atlassian-opsgenie-integration-handler-1.0-SNAPSHOT.jar
+      CodeUri: opsgenie_integration/target/atlassian-opsgenie-integration-handler-2.0.0.jar
+      Timeout: 60
 
   TestEntrypoint:
     Type: AWS::Serverless::Function
     Properties:
       Handler: com.atlassian.opsgenie.integration.HandlerWrapper::testEntrypoint
       Runtime: java8
-      CodeUri: opsgenie_integration/target/atlassian-opsgenie-integration-handler-1.0-SNAPSHOT.jar
+      CodeUri: opsgenie_integration/target/atlassian-opsgenie-integration-handler-2.0.0.jar
+      Timeout: 60

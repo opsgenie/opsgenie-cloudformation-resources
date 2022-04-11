@@ -1,7 +1,5 @@
 {
   "CREATE": {
-    "/OpsgenieApiEndpoint": "",
-    "/OpsgenieApiKey": "",
     "/Name": "Test-My-cfn-integration",
     "/IntegrationType": "API",
     "/OwnerTeamName": "CFN",
@@ -19,8 +17,6 @@
     "/AllowConfigurationAccess": false
   },
   "UPDATE": {
-    "/OpsgenieApiEndpoint": "",
-    "/OpsgenieApiKey": "",
     "/Name": "Test-My-cfn-integration",
     "/IntegrationType": "API",
     "/Enabled": true,

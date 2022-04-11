@@ -1,60 +1,58 @@
 package com.atlassian.opsgenie.integration;
 
-import software.amazon.cloudformation.proxy.*;
 import com.atlassian.opsgenie.integration.client.OpsgenieClient;
 import com.atlassian.opsgenie.integration.client.OpsgenieClientException;
 import com.atlassian.opsgenie.integration.model.GetIntegrationResponse;
+import org.apache.commons.lang3.StringUtils;
+import software.amazon.cloudformation.proxy.*;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
-public class ReadHandler extends BaseHandler<CallbackContext> {
+import static com.atlassian.opsgenie.integration.Helper.*;
+
+public class ReadHandler extends BaseHandler<CallbackContext, TypeConfigurationModel> {
 
     @Override
-    public ProgressEvent<ResourceModel, CallbackContext> handleRequest(
-            final AmazonWebServicesClientProxy proxy,
-            final ResourceHandlerRequest<ResourceModel> request,
-            final CallbackContext callbackContext,
-            final Logger logger) {
+    public ProgressEvent<ResourceModel, CallbackContext> handleRequest(AmazonWebServicesClientProxy proxy, ResourceHandlerRequest<ResourceModel> request, CallbackContext callbackContext,
+                                                                       Logger logger, TypeConfigurationModel typeConfiguration) {
 
+        final List<ResourceModel> models = new ArrayList<>();
         final ResourceModel model = request.getDesiredResourceState();
-
-        OpsgenieClient OGClient = new OpsgenieClient(model.getOpsgenieApiEndpoint(), model.getOpsgenieApiKey());
         try {
-            GetIntegrationResponse resp = OGClient.GetIntegration(model.getIntegrationId());
-            model.setAllowWriteAccess(resp.getData().isAllowWriteAccess());
-            model.setAllowReadAccess(resp.getData().isAllowReadAccess());
-            model.setAllowDeleteAccess(resp.getData().isAllowDeleteAccess());
-            model.setAllowConfigurationAccess(resp.getData().isAllowConfigurationAccess());
-            model.setEnabled(resp.getData().isEnabled());
-            if (resp.getData().getOwnerTeam() != null) {
-                model.setOwnerTeamId(resp.getData().getOwnerTeam().getId());
-                model.setOwnerTeamName(resp.getData().getOwnerTeam().getName());
+            OpsgenieClient OGClient = CreateOGClient(typeConfiguration);
+            if (StringUtils.isEmpty(model.getIntegrationId())) {
+                return GetServiceFailureResponse(404, "IntegrationId must be provided.");
             }
-            model.setResponders(resp.getData().getRespondersPropertyList());
 
+            GetIntegrationResponse getIntegrationResponse = OGClient.GetIntegration(model.getIntegrationId());
+            model.setAllowWriteAccess(getIntegrationResponse.getData()
+                                                            .isAllowWriteAccess());
+            model.setAllowReadAccess(getIntegrationResponse.getData()
+                                                           .isAllowReadAccess());
+            model.setAllowDeleteAccess(getIntegrationResponse.getData()
+                                                             .isAllowDeleteAccess());
+            model.setAllowConfigurationAccess(getIntegrationResponse.getData()
+                                                                    .isAllowConfigurationAccess());
+            model.setEnabled(getIntegrationResponse.getData()
+                                                   .isEnabled());
+            if (getIntegrationResponse.getData()
+                                      .getOwnerTeam() != null) {
+                model.setOwnerTeamId(getIntegrationResponse.getData()
+                                                           .getOwnerTeam()
+                                                           .getId());
+                model.setOwnerTeamName(getIntegrationResponse.getData()
+                                                             .getOwnerTeam()
+                                                             .getName());
+            }
+            model.setResponders(getIntegrationResponse.getData()
+                                                      .getRespondersPropertyList());
 
         } catch (OpsgenieClientException e) {
-            HandlerErrorCode errorCode = HandlerErrorCode.GeneralServiceException;
-            logger.log(e.getMessage());
-            e.printStackTrace();
-            if (e.getCode() == 429) {
-                errorCode = HandlerErrorCode.Throttling;
-            }
-            if (e.getCode() == 404) {
-                errorCode = HandlerErrorCode.NotFound;
-            }
-
-            return ProgressEvent.<ResourceModel, CallbackContext>builder()
-                    .message(e.getMessage())
-                    .errorCode(errorCode)
-                    .status(OperationStatus.FAILED)
-                    .build();
+            return GetServiceFailureResponse(e.getCode(), e.getMessage());
         } catch (IOException e) {
-            e.printStackTrace();
-            return ProgressEvent.<ResourceModel, CallbackContext>builder()
-                    .errorCode(HandlerErrorCode.InternalFailure)
-                    .status(OperationStatus.FAILED)
-                    .build();
+            return GetInternalFailureResponse(e.getMessage());
         }
 
         logger.log("[READ] " + model.getIntegrationId());

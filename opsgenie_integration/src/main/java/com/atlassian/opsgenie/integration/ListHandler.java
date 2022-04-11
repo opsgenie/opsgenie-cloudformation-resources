@@ -1,55 +1,41 @@
 package com.atlassian.opsgenie.integration;
 
-import software.amazon.cloudformation.proxy.*;
-import com.atlassian.opsgenie.integration.model.ListIntegrationResponse;
 import com.atlassian.opsgenie.integration.client.OpsgenieClient;
 import com.atlassian.opsgenie.integration.client.OpsgenieClientException;
+import com.atlassian.opsgenie.integration.model.ListIntegrationResponse;
+import software.amazon.cloudformation.proxy.*;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ListHandler extends BaseHandler<CallbackContext> {
+import static com.atlassian.opsgenie.integration.Helper.*;
+
+public class ListHandler extends BaseHandler<CallbackContext, TypeConfigurationModel> {
 
     @Override
-    public ProgressEvent<ResourceModel, CallbackContext> handleRequest(
-            final AmazonWebServicesClientProxy proxy,
-            final ResourceHandlerRequest<ResourceModel> request,
-            final CallbackContext callbackContext,
-            final Logger logger) {
+    public ProgressEvent<ResourceModel, CallbackContext> handleRequest(AmazonWebServicesClientProxy proxy, ResourceHandlerRequest<ResourceModel> request, CallbackContext callbackContext,
+                                                                       Logger logger, TypeConfigurationModel typeConfiguration) {
 
         final List<ResourceModel> models = new ArrayList<>();
-
-        OpsgenieClient OGClient = new OpsgenieClient(request.getDesiredResourceState().getOpsgenieApiEndpoint(), request.getDesiredResourceState().getOpsgenieApiKey());
-
+        final ResourceModel model = request.getDesiredResourceState();
         try {
-            ListIntegrationResponse resp = OGClient.ListIntegrations();
-            logger.log(resp.toString());
-            resp.getData().stream().forEach(model -> {
-                ResourceModel resourceModel = new ResourceModel();
-                resourceModel.setName(model.getName());
-                resourceModel.setIntegrationType(model.getType());
-                resourceModel.setIntegrationId(model.getId());
-                resourceModel.setOpsgenieApiEndpoint(request.getDesiredResourceState().getOpsgenieApiEndpoint());
-                resourceModel.setOpsgenieApiKey(request.getDesiredResourceState().getOpsgenieApiKey());
-                models.add(resourceModel);
-            });
-        } catch (IOException e) {
-            logger.log(e.getMessage());
-            e.printStackTrace();
-            return ProgressEvent.<ResourceModel, CallbackContext>builder()
-                    .status(OperationStatus.FAILED)
-                    .build();
+            OpsgenieClient OGClient = CreateOGClient(typeConfiguration);
+
+            ListIntegrationResponse listIntegrationResponse = OGClient.ListIntegrations();
+            listIntegrationResponse.getData()
+                                   .stream()
+                                   .forEach(dataModel -> {
+                                       ResourceModel resourceModel = new ResourceModel();
+                                       resourceModel.setName(dataModel.getName());
+                                       resourceModel.setIntegrationType(dataModel.getType());
+                                       resourceModel.setIntegrationId(dataModel.getId());
+                                       models.add(resourceModel);
+                                   });
         } catch (OpsgenieClientException e) {
-            logger.log(e.getMessage());
-            HandlerErrorCode errorCode = HandlerErrorCode.GeneralServiceException;
-            if (e.getCode() == 404) {
-                errorCode = HandlerErrorCode.NotFound;
-            }
-            return ProgressEvent.<ResourceModel, CallbackContext>builder()
-                    .errorCode(errorCode)
-                    .status(OperationStatus.FAILED)
-                    .build();
+            return GetServiceFailureResponse(e.getCode(), e.getMessage());
+        } catch (IOException e) {
+            return GetInternalFailureResponse(e.getMessage());
         }
 
         return ProgressEvent.<ResourceModel, CallbackContext>builder()
