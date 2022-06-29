@@ -51,6 +51,15 @@
           "IntegrationId"
         ]
       }
+    },
+    "IntegrationApiKey": {
+      "Description": "Opsgenie IntegrationApiKey",
+      "Value": {
+        "Fn::GetAtt": [
+          "TestIntegration",
+          "IntegrationApiKey"
+        ]
+      }
     }
   }
 }

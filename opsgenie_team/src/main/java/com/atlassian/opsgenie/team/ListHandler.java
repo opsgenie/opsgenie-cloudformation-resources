@@ -19,17 +19,19 @@ public class ListHandler extends BaseHandler<CallbackContext, TypeConfigurationM
                                                                        Logger logger, TypeConfigurationModel typeConfiguration) {
 
         final List<ResourceModel> models = new ArrayList<>();
-        final ResourceModel model = request.getDesiredResourceState();
+        final ResourceModel desiredResourceState = request.getDesiredResourceState();
         try {
             OpsgenieClient OGClient = CreateOGClient(typeConfiguration);
 
             ListTeamResponse listTeamResponse = OGClient.ListTeam();
             for (TeamDataModel teamDataModel : listTeamResponse.getTeamDataModel()) {
-                models.add(ResourceModel.builder()
-                                        .teamId(teamDataModel.getId())
-                                        .name(teamDataModel.getName())
-                                        .description(teamDataModel.getDescription())
-                                        .build());
+                if (teamDataModel.getId().equals(desiredResourceState.getTeamId())){
+                    models.add(ResourceModel.builder()
+                            .teamId(teamDataModel.getId())
+                            .name(teamDataModel.getName())
+                            .description(teamDataModel.getDescription())
+                            .build());
+                }
             }
         } catch (OpsgenieClientException e) {
             return GetServiceFailureResponse(e.getCode(), e.getMessage());

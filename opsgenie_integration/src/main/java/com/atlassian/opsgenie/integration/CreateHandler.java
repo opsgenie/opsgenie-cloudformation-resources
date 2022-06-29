@@ -70,9 +70,9 @@ public class CreateHandler extends BaseHandler<CallbackContext, TypeConfiguratio
             createIntegrationRequest.setEnabled(model.getEnabled());
 
             CreateIntegrationResponse createIntegrationResponse = OGClient.CreateIntegration(createIntegrationRequest);
-            model.setIntegrationId(createIntegrationResponse.getData()
+            model.setIntegrationId(createIntegrationResponse.getDataModel()
                                                             .getId());
-            model.setIntegrationApiKey(createIntegrationResponse.getData()
+            model.setIntegrationApiKey(createIntegrationResponse.getDataModel()
                                                                 .getApiKey());
         } catch (OpsgenieClientException e) {
             return GetServiceFailureResponse(e.getCode(), e.getMessage());

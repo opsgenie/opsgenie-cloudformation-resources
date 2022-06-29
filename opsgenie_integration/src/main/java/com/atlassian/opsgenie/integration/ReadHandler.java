@@ -18,7 +18,6 @@ public class ReadHandler extends BaseHandler<CallbackContext, TypeConfigurationM
     public ProgressEvent<ResourceModel, CallbackContext> handleRequest(AmazonWebServicesClientProxy proxy, ResourceHandlerRequest<ResourceModel> request, CallbackContext callbackContext,
                                                                        Logger logger, TypeConfigurationModel typeConfiguration) {
 
-        final List<ResourceModel> models = new ArrayList<>();
         final ResourceModel model = request.getDesiredResourceState();
         try {
             OpsgenieClient OGClient = CreateOGClient(typeConfiguration);
@@ -48,6 +47,8 @@ public class ReadHandler extends BaseHandler<CallbackContext, TypeConfigurationM
             }
             model.setResponders(getIntegrationResponse.getData()
                                                       .getRespondersPropertyList());
+
+            model.setOpsgenieApiEndpoint(typeConfiguration.getOpsgenieCredentials().getOpsgenieApiEndpoint());
 
         } catch (OpsgenieClientException e) {
             return GetServiceFailureResponse(e.getCode(), e.getMessage());
