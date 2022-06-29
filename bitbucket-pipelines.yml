@@ -121,7 +121,7 @@ pipelines:
             - export AWS_WEB_IDENTITY_TOKEN_FILE=$(pwd)/web-identity-token
             - export RESOURCE_NAME=Atlassian::Opsgenie::User
             - echo $BITBUCKET_STEP_OIDC_TOKEN > $(pwd)/web-identity-token
-            - ../user_script.sh
+            - ../script_with_delay.sh
             - ../test-check.sh
 
       - step:

@@ -20,7 +20,6 @@ public class UpdateHandler extends BaseHandler<CallbackContext, TypeConfiguratio
     public ProgressEvent<ResourceModel, CallbackContext> handleRequest(AmazonWebServicesClientProxy proxy, ResourceHandlerRequest<ResourceModel> request, CallbackContext callbackContext,
                                                                        Logger logger, TypeConfigurationModel typeConfiguration) {
 
-        final List<ResourceModel> models = new ArrayList<>();
         final ResourceModel model = request.getDesiredResourceState();
         try {
             OpsgenieClient OGClient = CreateOGClient(typeConfiguration);

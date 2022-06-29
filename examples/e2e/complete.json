@@ -46,7 +46,7 @@
     "IntegrationTest": {
       "Type": "Atlassian::Opsgenie::Integration",
       "Properties": {
-        "IntegrationType": "API",
+        "IntegrationType": "AmazonSns",
         "Name": "test integration",
         "Responders": [
           {
@@ -63,6 +63,41 @@
       },
       "DependsOn": [
         "TeamA"
+      ]
+    },
+    "MySns": {
+      "Type": "AWS::SNS::Topic",
+      "Properties": {
+        "DisplayName": "opsgenie-test-cloudformation-topic",
+        "Subscription": [
+          {
+            "Endpoint": {
+              "Fn::Join": [
+                "",
+                [
+                  {
+                    "Fn::GetAtt": [
+                      "IntegrationTest",
+                      "OpsgenieApiEndpoint"
+                    ]
+                  },
+                  "/v1/json/amazonsns?apiKey=",
+                  {
+                    "Fn::GetAtt": [
+                      "IntegrationTest",
+                      "IntegrationApiKey"
+                    ]
+                  }
+                ]
+              ]
+            },
+            "Protocol": "https"
+          }
+        ],
+        "TopicName": "opsgenie-test-cloudformation-topic"
+      },
+      "DependsOn": [
+        "IntegrationTest"
       ]
     }
   },
@@ -100,6 +135,24 @@
         "Fn::GetAtt": [
           "IntegrationTest",
           "IntegrationId"
+        ]
+      }
+    },
+    "IntegrationApiKey": {
+      "Description": "Opsgenie IntegrationApiKey",
+      "Value": {
+        "Fn::GetAtt": [
+          "IntegrationTest",
+          "IntegrationApiKey"
+        ]
+      }
+    },
+    "ApiEndpoint": {
+      "Description": "Opsgenie ApiEndpoint",
+      "Value": {
+        "Fn::GetAtt": [
+          "IntegrationTest",
+          "OpsgenieApiEndpoint"
         ]
       }
     }

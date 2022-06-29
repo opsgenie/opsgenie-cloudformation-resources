@@ -18,19 +18,22 @@ public class ListHandler extends BaseHandler<CallbackContext, TypeConfigurationM
                                                                        Logger logger, TypeConfigurationModel typeConfiguration) {
 
         final List<ResourceModel> models = new ArrayList<>();
-        final ResourceModel model = request.getDesiredResourceState();
+        final ResourceModel desiredResourceState = request.getDesiredResourceState();
         try {
             OpsgenieClient OGClient = CreateOGClient(typeConfiguration);
-
             ListIntegrationResponse listIntegrationResponse = OGClient.ListIntegrations();
             listIntegrationResponse.getData()
                                    .stream()
                                    .forEach(dataModel -> {
-                                       ResourceModel resourceModel = new ResourceModel();
-                                       resourceModel.setName(dataModel.getName());
-                                       resourceModel.setIntegrationType(dataModel.getType());
-                                       resourceModel.setIntegrationId(dataModel.getId());
-                                       models.add(resourceModel);
+                                       if (dataModel.getId()
+                                               .equals(desiredResourceState.getIntegrationId())) {
+                                           ResourceModel resourceModel = new ResourceModel();
+                                           resourceModel.setName(dataModel.getName());
+                                           resourceModel.setIntegrationType(dataModel.getType());
+                                           resourceModel.setIntegrationId(dataModel.getId());
+                                           resourceModel.setIntegrationApiKey(desiredResourceState.getIntegrationApiKey());
+                                           models.add(resourceModel);
+                                       }
                                    });
         } catch (OpsgenieClientException e) {
             return GetServiceFailureResponse(e.getCode(), e.getMessage());

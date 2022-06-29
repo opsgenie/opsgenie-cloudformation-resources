@@ -12,7 +12,7 @@ import java.util.List;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class DataModel {
 
-    private String Id;
+    private String id;
     private String name;
     private String type;
     private String ownerTeamId;
