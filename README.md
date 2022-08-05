@@ -5,10 +5,10 @@
 
 *As for the April 8, 2022, we updated the SDK and our models.*
 
-That means if you try to update resources please be careful if rollback is enabled. New version(v2.0.1) users will not
+That means if you try to update resources please be careful if rollback is enabled. New version(v2.0.2) users will not
 be affected of this issue
 
-Current version : *v2.0.1*
+Current version : *v2.0.2*
 
 Old version: *v2.0.0*
 
@@ -59,14 +59,14 @@ https://github.com/aws-cloudformation/cloudformation-cli
 
 - Opsgenie User resource
 ```shell
-wget https://opsgeniedownloads.s3.us-west-2.amazonaws.com/cloudformation/atlassian-opsgenie-user-v2.0.1.zip
+wget https://opsgeniedownloads.s3.us-west-2.amazonaws.com/cloudformation/atlassian-opsgenie-user-v2.0.2.zip
 
-aws s3 cp atlassian-opsgenie-user-v2.0.1.zip s3://$BUCKET_NAME
+aws s3 cp atlassian-opsgenie-user-v2.0.2.zip s3://$BUCKET_NAME
 
 aws cloudformation register-type \
 --region us-west-2 \
 --type-name "Atlassian::Opsgenie::User" \
---schema-handler-package "s3://$BUCKET_NAME/atlassian-opsgenie-user-v2.0.1.zip" \
+--schema-handler-package "s3://$BUCKET_NAME/atlassian-opsgenie-user-v2.0.2.zip" \
 --type RESOURCE > registration_token.json
 
 aws cloudformation describe-type-registration --registration-token $REGISTRATION_TOKEN
@@ -76,14 +76,14 @@ aws cloudformation set-type-default-version --arn $TYPE_VERSION_ARN
 
 - Opsgenie Team resource
 ```shell
-wget https://opsgeniedownloads.s3.us-west-2.amazonaws.com/cloudformation/atlassian-opsgenie-team-v2.0.1.zip
+wget https://opsgeniedownloads.s3.us-west-2.amazonaws.com/cloudformation/atlassian-opsgenie-team-v2.0.2.zip
 
-aws s3 cp atlassian-opsgenie-team-v2.0.1.zip s3://$BUCKET_NAME
+aws s3 cp atlassian-opsgenie-team-v2.0.2.zip s3://$BUCKET_NAME
 
 aws cloudformation register-type \
 --region us-west-2 \
 --type-name "Atlassian::Opsgenie::Team" \
---schema-handler-package "s3://$BUCKET_NAME/atlassian-opsgenie-team-v2.0.1.zip" \
+--schema-handler-package "s3://$BUCKET_NAME/atlassian-opsgenie-team-v2.0.2.zip" \
 --type RESOURCE > registration_token.json
 
 aws cloudformation describe-type-registration --registration-token $REGISTRATION_TOKEN
@@ -94,14 +94,14 @@ aws cloudformation set-type-default-version --arn $TYPE_VERSION_ARN
 
 - Opsgenie Integration resource
 ```shell
-wget https://opsgeniedownloads.s3.us-west-2.amazonaws.com/cloudformation/atlassian-opsgenie-integration-v2.0.1.zip
+wget https://opsgeniedownloads.s3.us-west-2.amazonaws.com/cloudformation/atlassian-opsgenie-integration-v2.0.2.zip
 
-aws s3 cp atlassian-opsgenie-integration-v2.0.1.zip s3://$BUCKET_NAME
+aws s3 cp atlassian-opsgenie-integration-v2.0.2.zip s3://$BUCKET_NAME
 
 aws cloudformation register-type \
 --region us-west-2 \
 --type-name "Atlassian::Opsgenie::Integration" \
---schema-handler-package "s3://$BUCKET_NAME/atlassian-opsgenie-integration-v2.0.1.zip" \
+--schema-handler-package "s3://$BUCKET_NAME/atlassian-opsgenie-integration-v2.0.2.zip" \
 --type RESOURCE > registration_token.json
 
 aws cloudformation describe-type-registration --registration-token $REGISTRATION_TOKEN
