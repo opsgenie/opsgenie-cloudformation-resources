@@ -1,19 +1,7 @@
 # Opsgenie Cloudformation Integration
 
 
-## Important Update
-
-*As for the April 8, 2022, we updated the SDK and our models.*
-
-That means if you try to update resources please be careful if rollback is enabled. New version(v2.0.2) users will not
-be affected of this issue
-
-Current version : *v2.0.2*
-
-Old version: *v2.0.0*
-
-Models have been changed. From now on, you have to set typeConfiguration via AWS CLI or AWS Console. You are not able to
-set credentials in resource models.
+The typeConfiguration needs to be set via AWS CLI or AWS Console. You will not able to set credentials in resource models.
 
 ```
 aws cloudformation set-type-configuration \
