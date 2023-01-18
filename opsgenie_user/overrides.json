@@ -1,12 +1,12 @@
 {
     "CREATE": {
         "/FullName": "test user123",
-        "/Username": "test@test.com",
+        "/Username": "5cjmtddlmcy6@test.com",
         "/Role": "User"
     },
     "UPDATE": {
         "/FullName": "test user123",
-        "/Username": "test@test.com",
+        "/Username": "5cjmtddlmcy6@test.com",
         "/Role": "User"
     }
 

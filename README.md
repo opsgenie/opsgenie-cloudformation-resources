@@ -47,14 +47,14 @@ https://github.com/aws-cloudformation/cloudformation-cli
 
 - Opsgenie User resource
 ```shell
-wget https://opsgeniedownloads.s3.us-west-2.amazonaws.com/cloudformation/atlassian-opsgenie-user-v2.0.2.zip
+wget https://opsgeniedownloads.s3.us-west-2.amazonaws.com/cloudformation/atlassian-opsgenie-user-v2.1.0.zip
 
-aws s3 cp atlassian-opsgenie-user-v2.0.2.zip s3://$BUCKET_NAME
+aws s3 cp atlassian-opsgenie-user-v2.1.0.zip s3://$BUCKET_NAME
 
 aws cloudformation register-type \
 --region us-west-2 \
 --type-name "Atlassian::Opsgenie::User" \
---schema-handler-package "s3://$BUCKET_NAME/atlassian-opsgenie-user-v2.0.2.zip" \
+--schema-handler-package "s3://$BUCKET_NAME/atlassian-opsgenie-user-v2.1.0.zip" \
 --type RESOURCE > registration_token.json
 
 aws cloudformation describe-type-registration --registration-token $REGISTRATION_TOKEN
@@ -64,14 +64,14 @@ aws cloudformation set-type-default-version --arn $TYPE_VERSION_ARN
 
 - Opsgenie Team resource
 ```shell
-wget https://opsgeniedownloads.s3.us-west-2.amazonaws.com/cloudformation/atlassian-opsgenie-team-v2.0.2.zip
+wget https://opsgeniedownloads.s3.us-west-2.amazonaws.com/cloudformation/atlassian-opsgenie-team-v2.1.0.zip
 
-aws s3 cp atlassian-opsgenie-team-v2.0.2.zip s3://$BUCKET_NAME
+aws s3 cp atlassian-opsgenie-team-v2.1.0.zip s3://$BUCKET_NAME
 
 aws cloudformation register-type \
 --region us-west-2 \
 --type-name "Atlassian::Opsgenie::Team" \
---schema-handler-package "s3://$BUCKET_NAME/atlassian-opsgenie-team-v2.0.2.zip" \
+--schema-handler-package "s3://$BUCKET_NAME/atlassian-opsgenie-team-v2.1.0.zip" \
 --type RESOURCE > registration_token.json
 
 aws cloudformation describe-type-registration --registration-token $REGISTRATION_TOKEN
@@ -82,14 +82,14 @@ aws cloudformation set-type-default-version --arn $TYPE_VERSION_ARN
 
 - Opsgenie Integration resource
 ```shell
-wget https://opsgeniedownloads.s3.us-west-2.amazonaws.com/cloudformation/atlassian-opsgenie-integration-v2.0.2.zip
+wget https://opsgeniedownloads.s3.us-west-2.amazonaws.com/cloudformation/atlassian-opsgenie-integration-v2.1.0.zip
 
-aws s3 cp atlassian-opsgenie-integration-v2.0.2.zip s3://$BUCKET_NAME
+aws s3 cp atlassian-opsgenie-integration-v2.1.0.zip s3://$BUCKET_NAME
 
 aws cloudformation register-type \
 --region us-west-2 \
 --type-name "Atlassian::Opsgenie::Integration" \
---schema-handler-package "s3://$BUCKET_NAME/atlassian-opsgenie-integration-v2.0.2.zip" \
+--schema-handler-package "s3://$BUCKET_NAME/atlassian-opsgenie-integration-v2.1.0.zip" \
 --type RESOURCE > registration_token.json
 
 aws cloudformation describe-type-registration --registration-token $REGISTRATION_TOKEN
