@@ -2,7 +2,7 @@ clone:
   depth: 10
 
 image:
-  name: docker-public.packages.atlassian.com/atlassian/bitbucket-pipelines-mvn-python3-awscli
+  name: docker-public.packages.atlassian.com/atlassian/bitbucket-pipelines-mvn-python3-awscli:java11
 
 
 pipelines:

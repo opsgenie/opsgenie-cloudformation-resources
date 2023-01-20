@@ -2,7 +2,7 @@
     "artifact_type": "RESOURCE",
     "typeName": "Atlassian::Opsgenie::Team",
     "language": "java",
-    "runtime": "java8",
+    "runtime": "java11",
     "entrypoint": "com.atlassian.opsgenie.team.HandlerWrapper::handleRequest",
     "testEntrypoint": "com.atlassian.opsgenie.team.HandlerWrapper::testEntrypoint",
     "settings": {

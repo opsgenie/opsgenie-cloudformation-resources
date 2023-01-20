@@ -19,7 +19,7 @@ function readJson() {
   fi
 }
 
-
+mvn -version
 mvn package -B
 if [[ "$?" -ne 0 ]] ; then
   echo 'build failed'; exit 1

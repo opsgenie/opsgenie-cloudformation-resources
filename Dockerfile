@@ -1,4 +1,4 @@
-FROM maven:3.8-jdk-8
+FROM maven:3.8.6-jdk-11
 
 COPY requirements.txt .
 

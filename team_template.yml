@@ -12,14 +12,14 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       Handler: com.atlassian.opsgenie.team.HandlerWrapper::handleRequest
-      Runtime: java8
-      CodeUri: opsgenie_team/target/atlassian-opsgenie-team-handler-2.0.2.jar
+      Runtime: java11
+      CodeUri: opsgenie_team/target/atlassian-opsgenie-team-handler-2.1.0.jar
       Timeout: 60
 
   TestEntrypoint:
     Type: AWS::Serverless::Function
     Properties:
       Handler: com.atlassian.opsgenie.team.HandlerWrapper::testEntrypoint
-      Runtime: java8
-      CodeUri: opsgenie_team/target/atlassian-opsgenie-team-handler-2.0.2.jar
+      Runtime: java11
+      CodeUri: opsgenie_team/target/atlassian-opsgenie-team-handler-2.1.0.jar
       Timeout: 60
