@@ -13,7 +13,7 @@ Resources:
     Properties:
       Handler: com.atlassian.opsgenie.user.HandlerWrapper::handleRequest
       Runtime: java11
-      CodeUri: opsgenie_user/target/atlassian-opsgenie-user-handler-2.1.0.jar
+      CodeUri: opsgenie_user/target/atlassian-opsgenie-user-handler-2.1.1.jar
       Timeout: 60
 
   TestEntrypoint:
@@ -21,5 +21,5 @@ Resources:
     Properties:
       Handler: com.atlassian.opsgenie.user.HandlerWrapper::testEntrypoint
       Runtime: java11
-      CodeUri: opsgenie_user/target/atlassian-opsgenie-user-handler-2.1.0.jar
+      CodeUri: opsgenie_user/target/atlassian-opsgenie-user-handler-2.1.1.jar
       Timeout: 60
