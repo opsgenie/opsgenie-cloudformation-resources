@@ -41,7 +41,7 @@
         },
         "OpsgenieApiKey": {
           "type": "string",
-          "pattern": "[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}"
+          "pattern": "^([a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12})|\\{\\{resolve:.*:[a-zA-Z0-9_.-/]+\\}\\}$"
         }
       },
       "type": "object",
