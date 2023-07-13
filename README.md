@@ -39,6 +39,9 @@ https://github.com/aws-cloudformation/cloudformation-cli
 - Opsgenie Integration
 
 
+- Opsgenie Schedule
+
+
 
 ## Installation
 
@@ -95,6 +98,16 @@ aws cloudformation register-type \
 aws cloudformation describe-type-registration --registration-token $REGISTRATION_TOKEN
 
 aws cloudformation set-type-default-version --arn $TYPE_VERSION_ARN
+```
+
+
+- Opsgenie Schedule resource
+```
+aws cloudformation register-type \
+--region us-west-2 \
+--type-name "Atlassian::Opsgenie::Schedule" \
+--schema-handler-package "s3://opsgeniedownloads/cloudformation/atlassian-opsgenie-schedule-v1.1.zip" \
+--type RESOURCE
 ```
 
 

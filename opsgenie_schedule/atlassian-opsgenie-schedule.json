@@ -1,0 +1,98 @@
+{
+  "typeName": "Atlassian::Opsgenie::Schedule",
+  "description": "Opsgenie Schedule Resource definition",
+  "sourceUrl": "https://github.com/opsgenie/opsgenie-cloudformation-resources",
+  "definitions": {
+  },
+  "properties": {
+    "OpsgenieApiEndpoint": {
+      "type": "string",
+      "pattern": "^https:\/\/api(\\.eu|\\.sandbox|)\\.opsgenie\\.com$",
+      "minLength": 1
+    },
+    "OpsgenieApiKey": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$",
+      "minLength": 1
+    },
+    "ScheduleId": {
+      "type": "string",
+      "pattern": "[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}"
+    },
+    "Enabled": {
+      "type": "boolean",
+      "description": "Schedule status, default is true",
+      "minLength": 1
+    },
+    "Name": {
+      "type": "string",
+      "pattern": "^[a-zA-Z0-9- _.]+$",
+      "description": "Integration name",
+      "minLength": 1
+    },
+    "Description": {
+      "type": "string",
+      "description": "Schedule description",
+      "minLength": 1
+    },
+    "OwnerTeamId": {
+      "type": "string",
+      "description": "Id of the schedule owner team.",
+      "minLength": 1
+    },
+    "OwnerTeamName": {
+      "type": "string",
+      "pattern": "^[a-zA-Z0-9-_.]+$",
+      "description": "Name of the schedule owner team.",
+      "minLength": 1
+    },
+    "Timezone": {
+      "type": "string",
+      "description": "Schedule timezone",
+      "minLength": 1
+    }
+  },
+  "required": [
+    "OpsgenieApiEndpoint",
+    "OpsgenieApiKey",
+    "Name"
+  ],
+  "primaryIdentifier": [
+    "/properties/ScheduleId"
+  ],
+  "readOnlyProperties": [
+    "/properties/ScheduleId"
+  ],
+  "writeOnlyProperties": [
+    "/properties/OwnerTeamId"
+  ],
+  "handlers": {
+    "create": {
+      "permissions": [
+        ""
+      ]
+    },
+    "read": {
+      "permissions": [
+        ""
+      ]
+    },
+    "update": {
+      "permissions": [
+        ""
+      ]
+    },
+    "delete": {
+      "permissions": [
+        ""
+      ]
+    },
+    "list": {
+      "permissions": [
+        ""
+      ]
+    }
+  },
+  "additionalProperties": false
+}
+

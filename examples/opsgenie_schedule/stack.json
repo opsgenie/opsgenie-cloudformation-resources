@@ -1,0 +1,35 @@
+{
+  "AWSTemplateFormatVersion": "2010-09-09",
+  "Description": "Opsgenie Schedule",
+  "Parameters": {
+    "OpsgenieApiKey": {
+      "Description": "Enter Opsgenie Api Key",
+      "Type": "String"
+    },
+    "OpsgenieEndpoint": {
+      "Description": "Enter Opsgenie Api URL",
+      "Type": "String",
+      "Default": "https://api.opsgenie.com",
+      "AllowedValues": [
+        "https://api.opsgenie.com",
+        "https://api.eu.opsgenie.com",
+        "https://api.sandbox.opsgenie.com"
+      ]
+    }
+  },
+  "Resources": {
+    "ScheduleTest": {
+      "Type": "Atlassian::Opsgenie::Schedule",
+      "Properties": {
+        "OpsgenieApiKey": {
+          "Ref": "OpsgenieApiKey"
+        },
+        "OpsgenieApiEndpoint": {
+          "Ref": "OpsgenieEndpoint"
+        },
+        "Name": "Test Schedule",
+        "Enabled":true
+      }
+    }
+  }
+}
